@@ -64,6 +64,34 @@ var engine = new RazorTemplateEngine("RazorTemplateAssembly");
 [assembly: InternalsVisibleTo("RazorTemplateAssembly")]
 ```
 
+### Custom namespace
+
+To make it easier to reference types from your project, you can instruct the engine to compile the template code to a specific namespace.
+
+For example, if you wanted to use a type from `MyProject.Models` namespace, normally you would have to include a `@using` directive:
+
+```razor
+@using MyProject.Models
+
+@{
+    var a = new MyType();
+}
+```
+
+But instead, you can configure `RazorTemplateEngine` with a custom root namespace:
+
+```csharp
+var engine = new RazorTemplateEngine("RazorTemplateAssembly", "MyProject.Models");
+```
+
+```razor
+@{
+    var a = new MyType();
+}
+```
+
+Note that the `@using` directive is no longer necessary as both `MyType` and the compiled template reside in the same namespace.
+
 ### Statically-typed model
 
 In order to have code completion inside a template, you need to let the IDE know what type of model it expects. In regular Razor templates you would do that via the `@model` directive, however with MiniRazor you need to use `@inherits` instead:
@@ -85,4 +113,15 @@ Output rendered with Razor templates is HTML-encoded by default. If you want to 
 
 @GetHtml() // &lt;p&gt;Hello world!&lt;/p&gt; 
 @Raw(GetHtml()) // <p>Hello world!</p>
+```
+
+### Parent assembly
+
+The `RazorTemplateEngine` object has a `ParentAssembly` property, which is used to determine the compilation context for the templates. Any assembly referenced by the parent assembly is also referenced by the template assembly.
+
+By default, the parent assembly is resolved as the assembly that called the `RazorTemplateEngine` constructor, but you can override this:
+
+```csharp
+var parent = Assembly.Load("...");
+var engine = new RazorTemplateEngine(parent, "RazorTemplateAssembly");
 ```

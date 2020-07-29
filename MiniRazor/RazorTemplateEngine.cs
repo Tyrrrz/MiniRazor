@@ -17,6 +17,14 @@ namespace MiniRazor
     /// </summary>
     public class RazorTemplateEngine
     {
+        private readonly Lazy<IReadOnlyList<MetadataReference>> _metadataReferencesLazy;
+
+        /// <summary>
+        /// Parent assembly.
+        /// The template assembly inherits all assembly references of the parent assembly.
+        /// </summary>
+        public Assembly ParentAssembly { get; }
+
         /// <summary>
         /// Name of the in-memory assembly where the templates are compiled.
         /// </summary>
@@ -30,30 +38,41 @@ namespace MiniRazor
         /// <summary>
         /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine(string templateAssemblyName, string? rootNamespace = null)
+        public RazorTemplateEngine(Assembly parentAssembly, string templateAssemblyName, string? rootNamespace = null)
         {
+            ParentAssembly = parentAssembly;
             TemplateAssemblyName = templateAssemblyName;
             RootNamespace = rootNamespace ?? templateAssemblyName;
+
+            _metadataReferencesLazy = new Lazy<IReadOnlyList<MetadataReference>>(() =>
+            {
+                var transitiveAssemblies = ParentAssembly
+                    .GetTransitiveAssemblies()
+                    .Select(n => n.TryLoad())
+                    .Where(n => n != null);
+
+                return transitiveAssemblies
+                    .Append(Assembly.Load("Microsoft.CSharp"))
+                    .Append(typeof(RazorTemplateEngine).Assembly)
+                    .Select(a => MetadataReference.CreateFromFile(a!.Location))
+                    .ToArray();
+            });
         }
 
         /// <summary>
         /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine() : this("MiniRazor.Generated") { }
-
-        private IReadOnlyList<MetadataReference> GetMetadataReferences()
+        public RazorTemplateEngine(string templateAssemblyName, string? rootNamespace = null)
+            : this(Assembly.GetCallingAssembly(), templateAssemblyName, rootNamespace)
         {
-            var sourceAssembly = Assembly.GetEntryAssembly() ?? typeof(RazorTemplateEngine).Assembly;
+        }
 
-            var transitiveAssemblies = sourceAssembly
-                .GetTransitiveAssemblies()
-                .Select(n => n.TryLoad())
-                .Where(n => n != null);
-
-            return transitiveAssemblies
-                .Append(typeof(IRazorTemplate).Assembly)
-                .Select(a => MetadataReference.CreateFromFile(a!.Location))
-                .ToArray();
+        /// <summary>
+        /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
+        /// </summary>
+        public RazorTemplateEngine()
+            : this(Assembly.GetCallingAssembly(), "MiniRazor.Generated")
+        {
         }
 
         /// <summary>
@@ -97,7 +116,7 @@ namespace MiniRazor
             var csharpDocumentCompilation = CSharpCompilation.Create(
                 TemplateAssemblyName,
                 new[] {csharpDocumentAst},
-                GetMetadataReferences(),
+                _metadataReferencesLazy.Value,
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             );
 
