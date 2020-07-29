@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
@@ -9,8 +8,6 @@ namespace MiniRazor.Internal.Extensions
 {
     internal static class TypeExtensions
     {
-        public static bool Implements(this Type type, Type interfaceType) => type.GetInterfaces().Contains(interfaceType);
-
         public static bool IsAnonymousType(this Type type) =>
             type.IsDefined(typeof(CompilerGeneratedAttribute)) &&
             type.Name.Contains("AnonymousType", StringComparison.Ordinal);

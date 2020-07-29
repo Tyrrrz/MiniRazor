@@ -30,16 +30,16 @@ namespace MiniRazor
         /// <summary>
         /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine(string templateAssemblyName, string rootNamespace)
+        public RazorTemplateEngine(string templateAssemblyName, string? rootNamespace = null)
         {
             TemplateAssemblyName = templateAssemblyName;
-            RootNamespace = rootNamespace;
+            RootNamespace = rootNamespace ?? templateAssemblyName;
         }
 
         /// <summary>
         /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine() : this("MiniRazor.$Dynamic", "MiniRazor.$Dynamic") { }
+        public RazorTemplateEngine() : this("MiniRazor.Generated") { }
 
         private IReadOnlyList<MetadataReference> GetMetadataReferences()
         {
@@ -62,17 +62,27 @@ namespace MiniRazor
         /// <remarks>This method is CPU-intensive, so you may want to run it on a separate thread with <code>Task.Run(() => ...)</code></remarks>
         public RazorTemplateDescriptor Compile(string source)
         {
+            const string templateTypeName = "MiniRazorTemplate";
+
             var engine = RazorProjectEngine.Create(
                 RazorConfiguration.Default,
                 EmptyRazorProjectFileSystem.Instance,
                 b => b
-                    .SetRootNamespace(RootNamespace)
+                    .SetNamespace(RootNamespace)
                     .SetBaseType(typeof(RazorTemplateBase).FullName)
+                    .ConfigureClass((s, c) =>
+                    {
+                        // Internal instead of public so we can use internal types inside
+                        c.Modifiers.Remove("public");
+                        c.Modifiers.Add("internal");
+
+                        c.ClassName = templateTypeName;
+                    })
             );
 
             var sourceDocument = RazorSourceDocument.Create(
                 source,
-                "RazorTemplate.Generated.cs"
+                $"{templateTypeName}.Generated.cs"
             );
 
             var codeDocument = engine.Process(
@@ -100,7 +110,7 @@ namespace MiniRazor
             var assembly = Assembly.Load(assemblyStream.ToArray());
 
             var templateType =
-                assembly.ExportedTypes.SingleOrDefault(t => t.Implements(typeof(IRazorTemplate))) ??
+                assembly.GetTypes().SingleOrDefault(t => t.Name.Equals(templateTypeName, StringComparison.Ordinal)) ??
                 throw new InvalidOperationException("Could not locate compiled template in the generated assembly.");
 
             return new RazorTemplateDescriptor(templateType);

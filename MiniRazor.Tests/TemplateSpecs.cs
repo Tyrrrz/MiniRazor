@@ -110,7 +110,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_with_an_internal_model()
         {
             // Arrange
-            var engine = new RazorTemplateEngine("FriendlyAssemblyName", "$xyz");
+            var engine = new RazorTemplateEngine("FriendlyAssemblyName");
             var template = engine.Compile("@Model.Foo");
 
             // Act

@@ -15,7 +15,7 @@ MiniRazor is a tiny wrapper around the Razor templating engine, which provides a
 ## Features
 
 - Easy to use, no need to assemble massive configurations for Roslyn or Razor yourself
-- Automatic HTML-encoding with support for `@Raw`
+- Full support of all C# features in templates, including `async`/`await`
 - No dependency on `Microsoft.AspNetCore.App` shared framework or runtime
 - Works with .NET Standard 2.0+
 
@@ -60,6 +60,29 @@ You can work around this, however, by using the `InternalsVisibleTo` attribute o
 var engine = new RazorTemplateEngine("RazorTemplateAssembly");
 
 // ...
-// Add this attribute to the assembly, whose internal types you want to expose
+// Add this attribute to the assembly whose internal types you want to expose to the template
 [assembly: InternalsVisibleTo("RazorTemplateAssembly")]
+```
+
+### Statically-typed model
+
+In order to have code completion inside a template, you need to let the IDE know what type of model it expects. In regular Razor templates you would do that via the `@model` directive, however with MiniRazor you need to use `@inherits` instead:
+
+```razor
+@inherits MiniRazor.RazorTemplateBase<MyModel>
+
+<p>Statically-typed model: @Model.Foo</p>
+```
+
+### HTML-encoding
+
+Output rendered with Razor templates is HTML-encoded by default. If you want to print raw HTML content, for example if it's sourced from somewhere else, you can use the `Raw()` method:
+
+```razor
+@{
+    string GetHtml() => "<p>Hello world!</p>";
+}
+
+@GetHtml() // &lt;p&gt;Hello world!&lt;/p&gt; 
+@Raw(GetHtml()) // <p>Hello world!</p>
 ```
