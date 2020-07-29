@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using MiniRazor.Primitives;
@@ -96,7 +95,7 @@ namespace MiniRazor
         /// </summary>
         public new T Model
         {
-            get => (T) ((object?) base.Model ?? throw new InvalidOperationException("Model is not set."));
+            get => (T) (object) base.Model!;
             set => base.Model = value;
         }
     }
