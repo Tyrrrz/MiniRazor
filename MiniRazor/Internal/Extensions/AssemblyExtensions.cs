@@ -8,6 +8,18 @@ namespace MiniRazor.Internal.Extensions
         public static Assembly Load(this AssemblyName assemblyName) =>
             Assembly.Load(assemblyName);
 
+        public static Assembly? TryLoad(this AssemblyName assemblyName)
+        {
+            try
+            {
+                return assemblyName.Load();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static IEnumerable<AssemblyName> GetTransitiveAssemblies(this Assembly assembly)
         {
             var assemblyNames = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
@@ -20,10 +32,13 @@ namespace MiniRazor.Internal.Extensions
         {
             foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
             {
-                if (assemblyNames.Add(referencedAssemblyName))
-                {
-                    referencedAssemblyName.Load().PopulateTransitiveAssemblies(assemblyNames);
-                }
+                // Already exists
+                if (!assemblyNames.Add(referencedAssemblyName))
+                    continue;
+
+                var referencedAssembly = referencedAssemblyName.TryLoad();
+                if (referencedAssembly != null)
+                    referencedAssembly.PopulateTransitiveAssemblies(assemblyNames);
             }
         }
     }

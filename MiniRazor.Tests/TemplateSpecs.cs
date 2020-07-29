@@ -110,7 +110,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_with_an_internal_model()
         {
             // Arrange
-            var engine = new RazorTemplateEngine("FriendlyAssemblyName");
+            var engine = new RazorTemplateEngine("FriendlyAssemblyName", "$xyz");
             var template = engine.Compile("@Model.Foo");
 
             // Act
@@ -174,6 +174,20 @@ namespace MiniRazor.Tests
 
             // Assert
             result.Should().Be("<div id=\"zzz\">bar</div>");
+        }
+
+        [Fact]
+        public async Task I_can_render_text_inside_of_an_HTML_attribute()
+        {
+            // Arrange
+            var engine = new RazorTemplateEngine();
+            var template = engine.Compile("<div class=\"xyz @Model.Foo\">fff</div>");
+
+            // Act
+            var result = await template.RenderAsync(new {Foo = "bar"});
+
+            // Assert
+            result.Should().Be("<div class=\"xyz bar\">fff</div>");
         }
 
         [Fact]

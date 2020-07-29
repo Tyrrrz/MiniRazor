@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using MiniRazor.Primitives;
@@ -11,6 +12,8 @@ namespace MiniRazor
     public abstract class RazorTemplateBase : IRazorTemplate
     {
         private readonly StringBuilder _buffer = new StringBuilder();
+
+        private string? _lastAttributeSuffix;
 
         /// <inheritdoc />
         public dynamic? Model { get; set; }
@@ -47,6 +50,30 @@ namespace MiniRazor
             }
         }
 
+        /// <inheritdoc />
+        public void BeginWriteAttribute(string name, string prefix, int prefixOffset, string suffix, int suffixOffset, int attributeValuesCount)
+        {
+            _lastAttributeSuffix = suffix;
+            WriteLiteral(prefix);
+        }
+
+        /// <inheritdoc />
+        public void WriteAttributeValue(string prefix, int prefixOffset, object value, int valueOffset, int valueLength, bool isLiteral)
+        {
+            WriteLiteral(prefix);
+            Write(value);
+        }
+
+        /// <inheritdoc />
+        public void EndWriteAttribute()
+        {
+            if (_lastAttributeSuffix == null)
+                return;
+
+            WriteLiteral(_lastAttributeSuffix);
+            _lastAttributeSuffix = null;
+        }
+
         /// <summary>
         /// Wraps a string into a container that instructs the renderer to avoid encoding.
         /// </summary>
@@ -57,5 +84,20 @@ namespace MiniRazor
 
         /// <inheritdoc />
         public string GetOutput() => _buffer.ToString();
+    }
+
+    /// <summary>
+    /// Generic version of <see cref="RazorTemplateBase"/>.
+    /// </summary>
+    public abstract class RazorTemplateBase<T> : RazorTemplateBase
+    {
+        /// <summary>
+        /// Template model.
+        /// </summary>
+        public new T Model
+        {
+            get => (T) ((object?) base.Model ?? throw new InvalidOperationException("Model is not set."));
+            set => base.Model = value;
+        }
     }
 }

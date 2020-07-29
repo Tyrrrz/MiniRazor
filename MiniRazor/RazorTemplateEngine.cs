@@ -23,37 +23,51 @@ namespace MiniRazor
         public string TemplateAssemblyName { get; }
 
         /// <summary>
-        /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
+        /// Root namespace, in which the compiled templates are located.
         /// </summary>
-        public RazorTemplateEngine(string templateAssemblyName) =>
-            TemplateAssemblyName = templateAssemblyName;
+        public string RootNamespace { get; }
 
         /// <summary>
         /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine() : this("MiniRazor.InMemoryAssembly") { }
+        public RazorTemplateEngine(string templateAssemblyName, string rootNamespace)
+        {
+            TemplateAssemblyName = templateAssemblyName;
+            RootNamespace = rootNamespace;
+        }
+
+        /// <summary>
+        /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
+        /// </summary>
+        public RazorTemplateEngine() : this("MiniRazor.$Dynamic", "MiniRazor.$Dynamic") { }
 
         private IReadOnlyList<MetadataReference> GetMetadataReferences()
         {
             var sourceAssembly = Assembly.GetEntryAssembly() ?? typeof(RazorTemplateEngine).Assembly;
 
-            var transitiveAssemblies = sourceAssembly.GetTransitiveAssemblies().Distinct().Select(n => n.Load());
+            var transitiveAssemblies = sourceAssembly
+                .GetTransitiveAssemblies()
+                .Select(n => n.TryLoad())
+                .Where(n => n != null);
 
             return transitiveAssemblies
                 .Append(typeof(IRazorTemplate).Assembly)
-                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                .Select(a => MetadataReference.CreateFromFile(a!.Location))
                 .ToArray();
         }
 
         /// <summary>
         /// Compiles a Razor template from source code.
         /// </summary>
+        /// <remarks>This method is CPU-intensive, so you may want to run it on a separate thread with <code>Task.Run(() => ...)</code></remarks>
         public RazorTemplateDescriptor Compile(string source)
         {
             var engine = RazorProjectEngine.Create(
                 RazorConfiguration.Default,
                 EmptyRazorProjectFileSystem.Instance,
-                b => b.SetBaseType(typeof(RazorTemplateBase).FullName)
+                b => b
+                    .SetRootNamespace(RootNamespace)
+                    .SetBaseType(typeof(RazorTemplateBase).FullName)
             );
 
             var sourceDocument = RazorSourceDocument.Create(
@@ -81,7 +95,7 @@ namespace MiniRazor
             var csharpDocumentCompilationResult = csharpDocumentCompilation.Emit(assemblyStream);
 
             if (!csharpDocumentCompilationResult.Success)
-                throw RazorCompilationException.FromDiagnostics(csharpDocumentCompilationResult.Diagnostics);
+                throw RazorCompilationException.FromDiagnostics(csharpDocument.GeneratedCode, csharpDocumentCompilationResult.Diagnostics);
 
             var assembly = Assembly.Load(assemblyStream.ToArray());
 
