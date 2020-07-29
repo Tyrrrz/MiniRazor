@@ -14,8 +14,10 @@ MiniRazor is a tiny wrapper around the Razor templating engine, which provides a
 
 ## Features
 
-- Easy to use, no need to assemble massive configurations for Roslyn or Razor yourself
-- Full support of all C# features in templates, including `async`/`await`
+- Easy to use, no need to configure Roslyn and Razor yourself
+- Supports all C# features, including `async`/`await`, local functions, and more
+- Supports internal types references within templates
+- Supports dynamic, anonymous, or statically-defined models
 - No dependency on `Microsoft.AspNetCore.App` shared framework or runtime
 - Works with .NET Standard 2.0+
 
