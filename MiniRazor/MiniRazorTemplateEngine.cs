@@ -15,7 +15,7 @@ namespace MiniRazor
     /// <summary>
     /// Engine which can be used to compile Razor templates into executable code.
     /// </summary>
-    public class RazorTemplateEngine
+    public class MiniRazorTemplateEngine
     {
         private readonly Lazy<IReadOnlyList<MetadataReference>> _metadataReferencesLazy;
 
@@ -36,9 +36,9 @@ namespace MiniRazor
         public string RootNamespace { get; }
 
         /// <summary>
-        /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
+        /// Initializes an instance of <see cref="MiniRazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine(Assembly parentAssembly, string templateAssemblyName, string? rootNamespace = null)
+        public MiniRazorTemplateEngine(Assembly parentAssembly, string templateAssemblyName, string? rootNamespace = null)
         {
             ParentAssembly = parentAssembly;
             TemplateAssemblyName = templateAssemblyName;
@@ -53,24 +53,24 @@ namespace MiniRazor
 
                 return transitiveAssemblies
                     .Append(Assembly.Load("Microsoft.CSharp"))
-                    .Append(typeof(RazorTemplateEngine).Assembly)
+                    .Append(typeof(MiniRazorTemplateEngine).Assembly)
                     .Select(a => MetadataReference.CreateFromFile(a!.Location))
                     .ToArray();
             });
         }
 
         /// <summary>
-        /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
+        /// Initializes an instance of <see cref="MiniRazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine(string templateAssemblyName, string? rootNamespace = null)
+        public MiniRazorTemplateEngine(string templateAssemblyName, string? rootNamespace = null)
             : this(Assembly.GetCallingAssembly(), templateAssemblyName, rootNamespace)
         {
         }
 
         /// <summary>
-        /// Initializes an instance of <see cref="RazorTemplateEngine"/>.
+        /// Initializes an instance of <see cref="MiniRazorTemplateEngine"/>.
         /// </summary>
-        public RazorTemplateEngine()
+        public MiniRazorTemplateEngine()
             : this(Assembly.GetCallingAssembly(), "MiniRazor.Generated")
         {
         }
@@ -79,7 +79,7 @@ namespace MiniRazor
         /// Compiles a Razor template from source code.
         /// </summary>
         /// <remarks>This method is CPU-intensive, so you may want to run it on a separate thread with <code>Task.Run(() => ...)</code></remarks>
-        public RazorTemplateDescriptor Compile(string source)
+        public MiniRazorTemplateDescriptor Compile(string source)
         {
             const string templateTypeName = "MiniRazorTemplate";
 
@@ -88,7 +88,7 @@ namespace MiniRazor
                 EmptyRazorProjectFileSystem.Instance,
                 b => b
                     .SetNamespace(RootNamespace)
-                    .SetBaseType(typeof(RazorTemplateBase).FullName)
+                    .SetBaseType(typeof(MiniRazorTemplateBase).FullName)
                     .ConfigureClass((s, c) =>
                     {
                         // Internal instead of public so we can use internal types inside
@@ -124,7 +124,7 @@ namespace MiniRazor
             var csharpDocumentCompilationResult = csharpDocumentCompilation.Emit(assemblyStream);
 
             if (!csharpDocumentCompilationResult.Success)
-                throw RazorCompilationException.FromDiagnostics(csharpDocument.GeneratedCode, csharpDocumentCompilationResult.Diagnostics);
+                throw MiniRazorCompilationException.FromDiagnostics(csharpDocument.GeneratedCode, csharpDocumentCompilationResult.Diagnostics);
 
             var assembly = Assembly.Load(assemblyStream.ToArray());
 
@@ -132,7 +132,7 @@ namespace MiniRazor
                 assembly.GetTypes().SingleOrDefault(t => t.Name.Equals(templateTypeName, StringComparison.Ordinal)) ??
                 throw new InvalidOperationException("Could not locate compiled template in the generated assembly.");
 
-            return new RazorTemplateDescriptor(templateType);
+            return new MiniRazorTemplateDescriptor(templateType);
         }
     }
 }

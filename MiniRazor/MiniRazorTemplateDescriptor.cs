@@ -7,17 +7,17 @@ namespace MiniRazor
     /// <summary>
     /// Compiled Razor template which can be used to render output.
     /// </summary>
-    public class RazorTemplateDescriptor
+    public class MiniRazorTemplateDescriptor
     {
         private readonly Type _templateType;
 
         /// <summary>
-        /// Initializes an instance of <see cref="RazorTemplateDescriptor"/>.
+        /// Initializes an instance of <see cref="MiniRazorTemplateDescriptor"/>.
         /// </summary>
-        public RazorTemplateDescriptor(Type templateType) =>
+        public MiniRazorTemplateDescriptor(Type templateType) =>
             _templateType = templateType;
 
-        private IRazorTemplate ActivateTemplate() => (IRazorTemplate)
+        private IMiniRazorTemplate ActivateTemplate() => (IMiniRazorTemplate)
             (Activator.CreateInstance(_templateType) ??
              throw new InvalidOperationException($"Could not instantiate template of type '{_templateType}'."));
 

@@ -9,7 +9,7 @@ namespace MiniRazor.Exceptions
     /// <summary>
     /// Exception which is thrown when an attempt to compile a Razor template has failed.
     /// </summary>
-    public partial class RazorCompilationException : Exception
+    public partial class MiniRazorCompilationException : Exception
     {
         /// <summary>
         /// Generated code.
@@ -17,18 +17,18 @@ namespace MiniRazor.Exceptions
         public string GeneratedCode { get; }
 
         /// <summary>
-        /// Initializes an instance of <see cref="RazorCompilationException"/>.
+        /// Initializes an instance of <see cref="MiniRazorCompilationException"/>.
         /// </summary>
-        public RazorCompilationException(string message, string generatedCode)
+        public MiniRazorCompilationException(string message, string generatedCode)
             : base(message)
         {
             GeneratedCode = generatedCode;
         }
     }
 
-    public partial class RazorCompilationException
+    public partial class MiniRazorCompilationException
     {
-        internal static RazorCompilationException FromDiagnostics(string generatedCode, IReadOnlyList<Diagnostic> diagnostics)
+        internal static MiniRazorCompilationException FromDiagnostics(string generatedCode, IReadOnlyList<Diagnostic> diagnostics)
         {
             var buffer = new StringBuilder();
 
@@ -44,7 +44,7 @@ namespace MiniRazor.Exceptions
                 .Select(d => d.ToString())
             );
 
-            return new RazorCompilationException(buffer.ToString(), generatedCode);
+            return new MiniRazorCompilationException(buffer.ToString(), generatedCode);
         }
     }
 }

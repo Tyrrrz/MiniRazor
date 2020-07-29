@@ -6,9 +6,9 @@ using MiniRazor.Primitives;
 namespace MiniRazor
 {
     /// <summary>
-    /// Base implementation of <see cref="IRazorTemplate"/>.
+    /// Base implementation of <see cref="IMiniRazorTemplate"/>.
     /// </summary>
-    public abstract class RazorTemplateBase : IRazorTemplate
+    public abstract class MiniRazorTemplateBase : IMiniRazorTemplate
     {
         private readonly StringBuilder _buffer = new StringBuilder();
 
@@ -86,9 +86,9 @@ namespace MiniRazor
     }
 
     /// <summary>
-    /// Generic version of <see cref="RazorTemplateBase"/>.
+    /// Generic version of <see cref="MiniRazorTemplateBase"/>.
     /// </summary>
-    public abstract class RazorTemplateBase<T> : RazorTemplateBase
+    public abstract class MiniRazorTemplateBase<T> : MiniRazorTemplateBase
     {
         /// <summary>
         /// Template model.

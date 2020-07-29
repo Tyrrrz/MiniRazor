@@ -5,7 +5,7 @@ namespace MiniRazor
     /// <summary>
     /// Razor template contract.
     /// </summary>
-    public interface IRazorTemplate
+    public interface IMiniRazorTemplate
     {
         /// <summary>
         /// Template model.
