@@ -33,10 +33,17 @@ namespace MiniRazor
         /// </summary>
         public RazorTemplateEngine() : this("MiniRazor.InMemoryAssembly") { }
 
-        private IReadOnlyList<MetadataReference> GetReferences() =>
-            Assembly.GetEntryAssembly().GetTransitiveAssemblies().Distinct().Select(n => n.Load())
+        private IReadOnlyList<MetadataReference> GetMetadataReferences()
+        {
+            var sourceAssembly = Assembly.GetEntryAssembly() ?? typeof(RazorTemplateEngine).Assembly;
+
+            var transitiveAssemblies = sourceAssembly.GetTransitiveAssemblies().Distinct().Select(n => n.Load());
+
+            return transitiveAssemblies
                 .Append(typeof(IRazorTemplate).Assembly)
-                .Select(a => MetadataReference.CreateFromFile(a.Location)).ToArray();
+                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                .ToArray();
+        }
 
         /// <summary>
         /// Compiles a Razor template from source code.
@@ -66,20 +73,21 @@ namespace MiniRazor
             var csharpDocumentCompilation = CSharpCompilation.Create(
                 TemplateAssemblyName,
                 new[] {csharpDocumentAst},
-                GetReferences(),
+                GetMetadataReferences(),
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             );
 
-            var assemblyStream = new MemoryStream();
+            using var assemblyStream = new MemoryStream();
             var csharpDocumentCompilationResult = csharpDocumentCompilation.Emit(assemblyStream);
 
             if (!csharpDocumentCompilationResult.Success)
-            {
                 throw RazorCompilationException.FromDiagnostics(csharpDocumentCompilationResult.Diagnostics);
-            }
 
             var assembly = Assembly.Load(assemblyStream.ToArray());
-            var templateType = assembly.ExportedTypes.Single(t => t.Implements(typeof(IRazorTemplate)));
+
+            var templateType =
+                assembly.ExportedTypes.SingleOrDefault(t => t.Implements(typeof(IRazorTemplate))) ??
+                throw new InvalidOperationException("Could not locate compiled template in the generated assembly.");
 
             return new RazorTemplateDescriptor(templateType);
         }

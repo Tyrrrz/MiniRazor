@@ -17,20 +17,24 @@ namespace MiniRazor
         public RazorTemplateDescriptor(Type templateType) =>
             _templateType = templateType;
 
+        private IRazorTemplate ActivateTemplate() => (IRazorTemplate)
+            (Activator.CreateInstance(_templateType) ??
+             throw new InvalidOperationException($"Could not instantiate template of type '{_templateType}'."));
+
         /// <summary>
         /// Renders the template with the specified model.
         /// </summary>
         public async Task<string> RenderAsync(object? model = null)
         {
-            var instance = (IRazorTemplate) Activator.CreateInstance(_templateType);
+            var template = ActivateTemplate();
 
-            instance.Model = model?.GetType().IsAnonymousType() == true
-                ? model.ToExpando()
+            template.Model = model?.GetType().IsAnonymousType() == true
+                ? model?.ToExpando()
                 : model;
 
-            await instance.ExecuteAsync();
+            await template.ExecuteAsync();
 
-            return instance.GetOutput();
+            return template.GetOutput();
         }
     }
 }
