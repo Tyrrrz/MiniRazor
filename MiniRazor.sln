@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor", "MiniRazor\MiniRazor.csproj", "{55199720-A2DF-4C70-A95F-9465F65011BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor.Tests", "MiniRazor.Tests\MiniRazor.Tests.csproj", "{36926806-0E5D-4E94-9773-00506EA859E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{DC63BCD7-20D4-4162-BF57-DF22D4974551}"
+ProjectSection(SolutionItems) = preProject
+	MiniRazor.props = MiniRazor.props
+	Changelog.md = Changelog.md
+	Readme.md = Readme.md
+	License.txt = License.txt
+EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55199720-A2DF-4C70-A95F-9465F65011BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55199720-A2DF-4C70-A95F-9465F65011BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55199720-A2DF-4C70-A95F-9465F65011BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55199720-A2DF-4C70-A95F-9465F65011BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36926806-0E5D-4E94-9773-00506EA859E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36926806-0E5D-4E94-9773-00506EA859E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36926806-0E5D-4E94-9773-00506EA859E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36926806-0E5D-4E94-9773-00506EA859E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

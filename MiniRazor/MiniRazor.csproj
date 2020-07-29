@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../MiniRazor.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <Authors>$(Company)</Authors>
+    <Description>Lightweight Razor engine for use in console or desktop applications</Description>
+    <PackageTags>razor template engine</PackageTags>
+    <PackageProjectUrl>https://github.com/Tyrrrz/MiniRazor</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/Tyrrrz/MiniRazor/blob/master/Changelog.md</PackageReleaseNotes>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../favicon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="3.1.6" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.6.0" />
+    <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.1.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="Nullable" Version="1.2.0" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

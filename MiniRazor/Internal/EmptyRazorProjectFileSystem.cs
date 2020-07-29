@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using Microsoft.AspNetCore.Razor.Language;
+
+namespace MiniRazor.Internal
+{
+    [ExcludeFromCodeCoverage]
+    internal partial class EmptyRazorProjectFileSystem : RazorProjectFileSystem
+    {
+        public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
+            Enumerable.Empty<RazorProjectItem>();
+
+        [Obsolete("Use GetItem(string path, string fileKind) instead.")]
+        public override RazorProjectItem GetItem(string path) =>
+            GetItem(path, null);
+
+        public override RazorProjectItem GetItem(string path, string? fileKind) =>
+            new NotFoundProjectItem(string.Empty, path, fileKind);
+    }
+
+    internal partial class EmptyRazorProjectFileSystem
+    {
+        public static EmptyRazorProjectFileSystem Instance { get; } = new EmptyRazorProjectFileSystem();
+
+        [ExcludeFromCodeCoverage]
+        private class NotFoundProjectItem : RazorProjectItem
+        {
+            public override string BasePath { get; }
+
+            public override string FilePath { get; }
+
+            public override string FileKind { get; }
+
+            public override bool Exists => false;
+
+            public override string PhysicalPath => throw new NotSupportedException();
+
+            public NotFoundProjectItem(string basePath, string path, string? fileKind)
+            {
+                BasePath = basePath;
+                FilePath = path;
+                FileKind = fileKind ?? FileKinds.GetFileKindFromFilePath(path);
+            }
+
+            public override Stream Read() => throw new NotSupportedException();
+        }
+    }
+}
