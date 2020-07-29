@@ -52,6 +52,7 @@ namespace MiniRazor
                     .Where(n => n != null);
 
                 return transitiveAssemblies
+                    .Append(ParentAssembly)
                     .Append(Assembly.Load("Microsoft.CSharp"))
                     .Append(typeof(MiniRazorTemplateEngine).Assembly)
                     .Select(a => MetadataReference.CreateFromFile(a!.Location))
