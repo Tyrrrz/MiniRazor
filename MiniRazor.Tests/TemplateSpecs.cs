@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MiniRazor.Exceptions;
 using MiniRazor.Tests.Models;
 using Xunit;
 
@@ -8,6 +9,18 @@ namespace MiniRazor.Tests
 {
     public class TemplateSpecs
     {
+        [Fact]
+        public void I_can_compile_a_template_and_get_an_error_if_it_is_invalid()
+        {
+            // Arrange
+            var engine = new RazorTemplateEngine();
+
+            // Act & assert
+            Assert.Throws<RazorCompilationException>(() =>
+                engine.Compile("@Xyz")
+            );
+        }
+
         [Fact]
         public async Task I_can_compile_multiple_templates_using_the_same_engine()
         {
@@ -55,6 +68,28 @@ namespace MiniRazor.Tests
 
             // Assert
             result.Should().Be("Hello, World!");
+        }
+
+        [Fact]
+        public async Task I_can_render_a_template_with_an_anonymous_object_that_contains_nested_anonymous_objects()
+        {
+            // Arrange
+            var engine = new RazorTemplateEngine();
+            var template = engine.Compile("@Model.Foo, @Model.Bar.X, @Model.Bar.Y");
+
+            // Act
+            var result = await template.RenderAsync(new
+            {
+                Foo = "xxx",
+                Bar = new
+                {
+                    X = 42,
+                    Y = 13
+                }
+            });
+
+            // Assert
+            result.Should().Be("xxx, 42, 13");
         }
 
         [Fact]
