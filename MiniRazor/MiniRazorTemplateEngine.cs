@@ -37,7 +37,38 @@ namespace MiniRazor
         {
         }
 
-        private MemoryStream CompileRazorCode(string assemblyName, RazorCodeDocument codeDocument)
+        private RazorCodeDocument ProcessRazorCode(string source, string rootNamespace, string typeName)
+        {
+            var internalEngine = RazorProjectEngine.Create(
+                RazorConfiguration.Default,
+                EmptyRazorProjectFileSystem.Instance,
+                b => b
+                    .SetNamespace(rootNamespace)
+                    .SetBaseType(typeof(MiniRazorTemplateBase).FullName)
+                    .ConfigureClass((s, c) =>
+                    {
+                        // Internal instead of public so we can reference internal types inside
+                        c.Modifiers.Remove("public");
+                        c.Modifiers.Add("internal");
+
+                        c.ClassName = typeName;
+                    })
+            );
+
+            var sourceDocument = RazorSourceDocument.Create(
+                source,
+                $"{typeName}.Generated.cs"
+            );
+
+            return internalEngine.Process(
+                sourceDocument,
+                null,
+                Array.Empty<RazorSourceDocument>(),
+                Array.Empty<TagHelperDescriptor>()
+            );
+        }
+
+        private Assembly CompileRazorCode(string assemblyName, RazorCodeDocument codeDocument)
         {
             var csharpDocument = codeDocument.GetCSharpDocument();
             var csharpDocumentAst = CSharpSyntaxTree.ParseText(csharpDocument.GeneratedCode);
@@ -49,19 +80,19 @@ namespace MiniRazor
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             );
 
-            var assemblyStream = new MemoryStream();
+            using var assemblyStream = new MemoryStream();
             var csharpDocumentCompilationResult = csharpDocumentCompilation.Emit(assemblyStream);
 
             if (!csharpDocumentCompilationResult.Success)
             {
-                throw MiniRazorCompilationException.Failure(
+                throw MiniRazorException.CompilationFailed(
                     csharpDocument.GeneratedCode,
                     csharpDocumentCompilationResult.Diagnostics
                 );
             }
 
             assemblyStream.Seek(0, SeekOrigin.Begin);
-            return assemblyStream;
+            return _assemblyLoadContext.LoadFromStream(assemblyStream);
         }
 
         /// <summary>
@@ -72,39 +103,11 @@ namespace MiniRazor
         {
             const string templateTypeName = "MiniRazorTemplate";
 
-            var engine = RazorProjectEngine.Create(
-                RazorConfiguration.Default,
-                EmptyRazorProjectFileSystem.Instance,
-                b => b
-                    .SetNamespace(rootNamespace)
-                    .SetBaseType(typeof(MiniRazorTemplateBase).FullName)
-                    .ConfigureClass((s, c) =>
-                    {
-                        // Internal instead of public so we can use internal types inside
-                        c.Modifiers.Remove("public");
-                        c.Modifiers.Add("internal");
-
-                        c.ClassName = templateTypeName;
-                    })
-            );
-
-            var sourceDocument = RazorSourceDocument.Create(
-                source,
-                $"{templateTypeName}.Generated.cs"
-            );
-
-            var codeDocument = engine.Process(
-                sourceDocument,
-                null,
-                Array.Empty<RazorSourceDocument>(),
-                Array.Empty<TagHelperDescriptor>()
-            );
-
-            using var assemblyStream = CompileRazorCode(assemblyName, codeDocument);
-            var assembly = _assemblyLoadContext.LoadFromStream(assemblyStream);
+            var templateCode = ProcessRazorCode(source, rootNamespace, templateTypeName);
+            var templateAssembly = CompileRazorCode(assemblyName, templateCode);
 
             var templateType =
-                assembly.GetTypes().SingleOrDefault(t => t.Name.Equals(templateTypeName, StringComparison.Ordinal)) ??
+                templateAssembly.GetTypes().SingleOrDefault(t => t.Name.Equals(templateTypeName, StringComparison.Ordinal)) ??
                 throw new InvalidOperationException("Could not locate compiled template in the generated assembly.");
 
             return new MiniRazorTemplateDescriptor(templateType);
