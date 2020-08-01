@@ -17,7 +17,7 @@ namespace MiniRazor
         public MiniRazorTemplateDescriptor(Type templateType) =>
             _templateType = templateType;
 
-        private IMiniRazorTemplate ActivateTemplate() => (IMiniRazorTemplate)
+        private MiniRazorTemplateBase ActivateTemplate() => (MiniRazorTemplateBase)
             (Activator.CreateInstance(_templateType) ??
              throw new InvalidOperationException($"Could not instantiate template of type '{_templateType}'."));
 
@@ -28,9 +28,11 @@ namespace MiniRazor
         {
             var template = ActivateTemplate();
 
-            template.Model = model?.GetType().IsAnonymousType() == true
-                ? model?.ToExpando()
-                : model;
+            template.SetModel(
+                model?.GetType().IsAnonymousType() == true
+                    ? model?.ToExpando()
+                    : model
+            );
 
             await template.ExecuteAsync();
 
