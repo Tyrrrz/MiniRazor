@@ -26,4 +26,4 @@ jobs:
       uses: codecov/codecov-action@v1.0.5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: MiniRazor.Tests/bin/Release/Coverage.xml
+        file: MiniRazor.Tests/bin/Release/Coverage.netcoreapp3.1.xml

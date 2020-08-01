@@ -28,7 +28,7 @@ namespace MiniRazor.Exceptions
 
     public partial class MiniRazorCompilationException
     {
-        internal static MiniRazorCompilationException FromDiagnostics(string generatedCode, IReadOnlyList<Diagnostic> diagnostics)
+        internal static MiniRazorCompilationException Failure(string generatedCode, IReadOnlyList<Diagnostic> diagnostics)
         {
             var buffer = new StringBuilder();
 

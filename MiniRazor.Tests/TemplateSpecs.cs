@@ -13,7 +13,7 @@ namespace MiniRazor.Tests
         public void I_can_compile_a_template_and_get_an_error_if_it_is_invalid()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
 
             // Act & assert
             Assert.Throws<MiniRazorCompilationException>(() =>
@@ -25,7 +25,7 @@ namespace MiniRazor.Tests
         public async Task I_can_compile_multiple_templates_using_the_same_engine()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
 
             var template1 = engine.Compile("Hello, @Model.Foo!");
             var template2 = engine.Compile("Goodbye, @Model.Bar...");
@@ -40,10 +40,29 @@ namespace MiniRazor.Tests
         }
 
         [Fact]
+        public async Task I_can_compile_templates_using_different_engines()
+        {
+            // Arrange
+            using var engine1 = new MiniRazorTemplateEngine();
+            using var engine2 = new MiniRazorTemplateEngine();
+
+            var template1 = engine1.Compile("Hello, @Model.Foo!");
+            var template2 = engine2.Compile("Goodbye, @Model.Bar...");
+
+            // Act
+            var result1 = await template1.RenderAsync(new {Foo = "World"});
+            var result2 = await template2.RenderAsync(new {Bar = "Meagerness"});
+
+            // Assert
+            result1.Should().Be("Hello, World!");
+            result2.Should().Be("Goodbye, Meagerness...");
+        }
+
+        [Fact]
         public async Task I_can_render_a_template_multiple_times_without_recompiling()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("Hello, @Model.Foo!");
 
             // Act
@@ -60,7 +79,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_with_an_anonymous_object()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("Hello, @Model.Foo!");
 
             // Act
@@ -74,7 +93,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_with_an_anonymous_object_that_contains_nested_anonymous_objects()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@Model.Foo, @Model.Bar.X, @Model.Bar.Y");
 
             // Act
@@ -96,7 +115,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_with_a_model()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@Model.Foo & @Model.Number");
 
             // Act
@@ -110,8 +129,8 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_with_an_internal_model()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine("FriendlyAssemblyName");
-            var template = engine.Compile("@Model.Foo");
+            using var engine = new MiniRazorTemplateEngine();
+            var template = engine.Compile("@Model.Foo", "FriendlyAssemblyName");
 
             // Act
             var result = await template.RenderAsync(new TestInternalModel("bar"));
@@ -124,7 +143,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_which_calls_methods_on_a_model()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@Model.GetSum()");
 
             // Act
@@ -138,7 +157,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_which_calls_async_methods_on_a_model()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@await Model.GetSumAsync()");
 
             // Act
@@ -152,7 +171,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_which_calls_a_locally_defined_method()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@{ int GetNumber() => 42; }@GetNumber()");
 
             // Act
@@ -166,7 +185,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_a_template_which_contains_HTML_tokens()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("<div id=\"zzz\">@Model.Foo</div>");
 
             // Act
@@ -180,7 +199,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_text_inside_of_an_HTML_attribute()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("<div class=\"xyz @Model.Foo\">fff</div>");
 
             // Act
@@ -194,7 +213,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_text_that_contains_HTML_tokens_and_have_them_automatically_encoded()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@(\"<div id='foo'>bar</div>\")");
 
             // Act
@@ -208,7 +227,7 @@ namespace MiniRazor.Tests
         public async Task I_can_render_text_that_contains_HTML_tokens_and_manually_opt_out_of_encoding()
         {
             // Arrange
-            var engine = new MiniRazorTemplateEngine();
+            using var engine = new MiniRazorTemplateEngine();
             var template = engine.Compile("@Raw(\"<div id='foo'>bar</div>\")");
 
             // Act
