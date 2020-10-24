@@ -6,6 +6,8 @@
 [![Downloads](https://img.shields.io/nuget/dt/MiniRazor.svg)](https://nuget.org/packages/MiniRazor)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
+**Project status: maintenance mode** (bug fixes only).
+
 MiniRazor is a tiny wrapper around the Razor templating engine, which provides a way to compile and render templates on demand. This library focuses specifically on providing the lightest possible implementation that can be used in console, desktop, or other non-web applications.
 
 ## Download
