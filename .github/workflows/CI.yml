@@ -24,8 +24,12 @@ jobs:
         with:
           dotnet-version: 5.0.100
 
-      - name: Build & test
-        run: dotnet test --configuration Release --logger GitHubActions
+      - name: Build & test (.NET v2.1)
+        # Doesn't support test loggers
+        run: dotnet test --configuration Release --framework netcoreapp2.1
+
+      - name: Build & test (.NET v5.0)
+        run: dotnet test --configuration Release --logger GitHubActions --framework net5.0
 
       - name: Upload coverage
         uses: codecov/codecov-action@v1.0.5
