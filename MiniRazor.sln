@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor.Tests", "MiniRazo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{DC63BCD7-20D4-4162-BF57-DF22D4974551}"
 ProjectSection(SolutionItems) = preProject
-	MiniRazor.props = MiniRazor.props
+	Directory.Build.props = Directory.Build.props
 	Changelog.md = Changelog.md
 	Readme.md = Readme.md
 	License.txt = License.txt
