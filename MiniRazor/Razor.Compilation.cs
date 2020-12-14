@@ -14,8 +14,7 @@ namespace MiniRazor
 {
     public static partial class Razor
     {
-        private static readonly Cache<Assembly, IReadOnlyList<MetadataReference>> MetadataReferenceCache =
-            new Cache<Assembly, IReadOnlyList<MetadataReference>>(20);
+        private static readonly Cache<Assembly, IReadOnlyList<MetadataReference>> MetadataReferenceCache = new(20);
 
         private static IReadOnlyList<MetadataReference> GetReferences(Assembly parentAssembly)
         {

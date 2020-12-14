@@ -7,7 +7,7 @@ namespace MiniRazor.Internal
     internal class Cache<TKey, TValue> where TKey : notnull
     {
         private readonly int _maxCount;
-        private readonly Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>();
+        private readonly Dictionary<TKey, TValue> _dictionary = new();
 
         public Cache(int maxCount = int.MaxValue) => _maxCount = maxCount;
 

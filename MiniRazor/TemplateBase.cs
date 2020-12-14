@@ -30,7 +30,7 @@ namespace MiniRazor
         /// <summary>
         /// Wraps a string in a container that instructs the renderer to avoid encoding.
         /// </summary>
-        protected RawString Raw(string value) => new RawString(value);
+        protected RawString Raw(string value) => new(value);
 
         /// <summary>
         /// Writes a template literal.

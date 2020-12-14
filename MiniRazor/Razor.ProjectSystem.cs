@@ -35,7 +35,7 @@ namespace MiniRazor
         [ExcludeFromCodeCoverage]
         private class EmptyRazorProjectFileSystem : RazorProjectFileSystem
         {
-            public static EmptyRazorProjectFileSystem Instance { get; } = new EmptyRazorProjectFileSystem();
+            public static EmptyRazorProjectFileSystem Instance { get; } = new();
 
             public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
                 Enumerable.Empty<RazorProjectItem>();
