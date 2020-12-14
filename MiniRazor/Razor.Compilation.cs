@@ -14,30 +14,50 @@ namespace MiniRazor
 {
     public static partial class Razor
     {
-        private static readonly Cache<Assembly, IReadOnlyList<MetadataReference>> MetadataReferenceCache = new(20);
-
-        private static IReadOnlyList<MetadataReference> GetReferences(Assembly parentAssembly)
+        private static IReadOnlyList<MetadataReference> GetReferences(
+            AssemblyLoadContext assemblyLoadContext,
+            Assembly parentAssembly)
         {
-            IEnumerable<MetadataReference> EnumerateReferences()
+            void PopulateTransitiveDependencies(Assembly assembly, ICollection<AssemblyName> assemblyNames)
             {
-                // Implicit references
-                yield return Assembly.Load("Microsoft.CSharp").ToMetadataReference();
-                yield return typeof(TemplateDescriptor).Assembly.ToMetadataReference();
-                yield return parentAssembly.ToMetadataReference();
-
-                // References from parent assembly
-                foreach (var dependency in parentAssembly.GetTransitiveDependencies())
+                foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
                 {
-                    var dependencyAssembly = dependency.TryLoad();
-                    if (dependencyAssembly != null)
-                        yield return dependencyAssembly.ToMetadataReference();
+                    assemblyNames.Add(referencedAssemblyName);
+
+                    var referencedAssembly = assemblyLoadContext.LoadFromAssemblyName(referencedAssemblyName);
+                    PopulateTransitiveDependencies(referencedAssembly, assemblyNames);
                 }
             }
 
-            return MetadataReferenceCache.GetOrSet(
-                parentAssembly,
-                () => EnumerateReferences().Distinct().ToArray()
-            );
+            IEnumerable<MetadataReference> EnumerateReferences()
+            {
+                // Implicit references
+
+                yield return assemblyLoadContext
+                    .LoadFromAssemblyName(new AssemblyName("Microsoft.CSharp"))
+                    .ToMetadataReference();
+
+                yield return assemblyLoadContext
+                    .LoadFromAssemblyName(typeof(Razor).Assembly.GetName())
+                    .ToMetadataReference();
+
+                yield return assemblyLoadContext
+                    .LoadFromAssemblyName(parentAssembly.GetName())
+                    .ToMetadataReference();
+
+                // References from parent assembly
+                var transitiveDependencies = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
+                PopulateTransitiveDependencies(parentAssembly, transitiveDependencies);
+
+                foreach (var dependency in transitiveDependencies)
+                {
+                    yield return assemblyLoadContext
+                        .LoadFromAssemblyName(dependency)
+                        .ToMetadataReference();
+                }
+            }
+
+            return EnumerateReferences().Distinct().ToArray();
         }
 
         private static TemplateDescriptor Compile(
@@ -84,7 +104,11 @@ namespace MiniRazor
         /// Compiled resources are stored in memory and can only be released by unloading the context.
         /// </remarks>
         public static TemplateDescriptor Compile(string source, AssemblyLoadContext assemblyLoadContext) =>
-            Compile(source, GetReferences(Assembly.GetCallingAssembly()), assemblyLoadContext);
+            Compile(
+                source,
+                GetReferences(assemblyLoadContext, Assembly.GetCallingAssembly()),
+                assemblyLoadContext
+            );
 
         /// <summary>
         /// Compiles a Razor template into executable code.
@@ -94,6 +118,10 @@ namespace MiniRazor
         /// Use the overload that takes <see cref="AssemblyLoadContext"/> to specify a custom assembly context that can be unloaded.
         /// </remarks>
         public static TemplateDescriptor Compile(string source) =>
-            Compile(source, GetReferences(Assembly.GetCallingAssembly()), AssemblyLoadContext.Default);
+            Compile(
+                source,
+                GetReferences(AssemblyLoadContext.Default, Assembly.GetCallingAssembly()),
+                AssemblyLoadContext.Default
+            );
     }
 }

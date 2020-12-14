@@ -34,7 +34,7 @@ namespace MiniRazor
                     options.SetNamespace(actualNamespace);
                     options.SetBaseType("MiniRazor.TemplateBase<dynamic>");
 
-                    options.ConfigureClass((doc, node) =>
+                    options.ConfigureClass((_, node) =>
                     {
                         node.Modifiers.Clear();
 
