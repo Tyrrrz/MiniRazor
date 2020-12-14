@@ -8,7 +8,7 @@
 
 **Project status: maintenance mode** (bug fixes only).
 
-MiniRazor is a tiny wrapper around the Razor templating engine, which provides a way to compile and render templates on demand. This library focuses specifically on providing the lightest possible implementation that can be used in console, desktop, or other non-web applications.
+MiniRazor is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both at build time and at run time.
 
 ## Download
 
@@ -16,82 +16,105 @@ MiniRazor is a tiny wrapper around the Razor templating engine, which provides a
 
 ## Features
 
-- Easy to use, no need to configure Roslyn and Razor yourself
-- Supports all C# features, including `async`/`await`, local functions, and more
-- Supports internal types references within templates
-- Supports dynamic, anonymous, or statically-defined models
-- Uses an isolated assembly context for compiled code
+- Can be used to compile and render templates at run time
+- Can be used to compile templates at build time and render them at runtime
+- Simple interface, designed for ease of use
+- Works with regular models, dynamic and anonymous objects
 - No dependency on `Microsoft.AspNetCore.App` shared framework or runtime
-- Works with .NET Standard 2.0+
+- Targets .NET Standard 2.0+
 
 ## Usage
 
-### Simple usage
+### Compile templates at build time
 
-The following example compiles a template and renders it using a model:
+In most cases, you will want to compile templates at build time. This is suitable and highly recommended for scenarios where your templates are not expected to change.
+
+To do that, first create a Razor template similar to this one:
+
+```razor
+@inherits MiniRazor.TemplateBase<string>
+@namespace MyNamespace.Templates
+
+<html>
+
+<head>
+    <title>Hello @Model</title>
+</head>
+
+<body>
+    <p>Hello @Model</p>
+</body>
+
+</html>
+```
+
+Note the usage of `@inherits` and `@namespace` directives:
+
+- `@inherits` directive indicates that the base type of this template is `MiniRazor.TemplateBase<TModel>`, with the model of type `string`. If this directive is not included, the template will by default inherit from `MiniRazor.TemplateBase<dynamic>`, which doesn't provide intellisense support and type-safety when working with the model.
+- `@namespace` directive instructs the compiler to put the generated class into the `MyNamespace.Templates` namespace. If this directive is omitted, the default namespace of `MiniRazor.GeneratedTemplates` is used instead.
+
+In order to make the template accessible by MiniRazor's source generator, you need to add it to the project as `AdditionalFiles` and mark it with the `IsRazorTemplate="true"` attribute:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MiniRazor" Version="xxx" />
+  </ItemGroup>
+
+</Project>
+```
+
+Once that's done, you can run `dotnet build` to build the project and trigger the source generator. Given that the template's file name is `TemplateFoo.cshtml`, you should be able to access the generated class via `MyNamespace.Templates.TemplateFoo` and render it by calling the static `RenderAsync(...)` method:
 
 ```csharp
-var engine = new MiniRazorTemplateEngine();
+// Reference the namespace where the template is located
+using MyNamespace.Templates;
 
-// Compile template (you may want to cache this instance)
-var template = engine.Compile("<p>Hello, @Model.Subject!</p>");
+// Render the template to string, with @Model set to "world"
+var output = await TemplateFoo.RenderAsync("world");
 
-// Render template
-var result = await template.RenderAsync(new MyModel { Subject = "World" });
+// Or, alternatively, render it to the specified TextWriter
+await TemplateFoo.RenderAsync(Console.Out, "world");
+```
 
-// -- result:
+Note that the type of the `model` parameter in `RenderAsync(...)` is inferred from the `@inherits` directive in the template. Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the method expects a parameter of type `string`.
+
+### Compile templates at run time
+
+If the previous approach doesn't fit your usage scenario, you can also compile templates at runtime. To do that, simply call `Razor.Compile(...)` with the template's source code:
+
+```csharp
+// Compile the template into an in-memory assembly
+var template = Razor.Compile("<p>Hello, @Model.Subject!</p>");
+
+// Render the template to string
+var output = await template.RenderAsync(new MyModel { Subject = "World" });
 // <p>Hello, World!</p>
 ```
 
-The entry point, `MiniRazorTemplateEngine` is responsible for compiling Razor templates into IL code. Each compilation creates a new dynamic assembly, so it's strongly recommended to cache compiled templates as much as possible. How exactly you do this is up to you.
+Calling `Razor.Compile(...)` compiles the supplied Razor code directly into IL loaded in-memory. The returned object can then be used to render output.
 
-Once compiled, the template can be rendered as many times as needed. Keep in mind that the `RenderAsync` method is asynchronous as it needs to be able to render templates that contain asynchronous method invocations inside them.
-
-### Anonymous model
-
-You can also render an anonymous model as well:
+Note that, by default, MiniRazor uses the default assembly load context, which means that, once compiled, the templates will stay in memory forever. To avoid that, you can pass a custom instance of `AssemblyLoadContext` instead:
 
 ```csharp
-var result = await template.RenderAsync(new { Foo = "Bar" });
-```
+// Create an isolated assembly load context
+var alc = new AssemblyLoadContext("MyALC", true);
 
-### Cleaning up
+// Compile the template
+var template = Razor.Compile("<p>Hello, @Model.Subject!</p>", alc);
 
-Under the hood, MiniRazor uses Roslyn to compile Razor templates into IL code. In doing so, it creates a dynamic assembly for each compiled template.
-
-To avoid memory leaks, you will likely want to get rid of the generated assemblies once you're done with the templates. You can do so by calling `Dispose()` on the `MiniRazorTemplateEngine`:
-
-```csharp
-// Frees up resources used by compiled templates
-engine.Dispose();
-```
-
-By disposing the engine, all templates compiled by that engine will become unusable.
-
-_Note: this only works on projects targeting .NET Core 3.1+. On older frameworks that don't support assembly unloading, calling `Dispose()` will not do anything._
-
-### Referencing internal types
-
-Sometimes you may want to reference internal types in a template. Normally, since the template is compiled into a separate dynamic assembly in memory, it can't access internal types defined in other assemblies.
-
-You can work around this, however, by using the `InternalsVisibleTo` attribute on the assembly that contains those internal types. Although, by default, assembly names are generated randomly, you can specify one yourself so that the template uses the same assembly name as the one referenced in the attribute.
-
-```csharp
-var template = engine.Compile("<p>@Model.Foo</p>", "RazorTemplateAssembly");
-
-// ...
-// Add this attribute to the assembly whose internal types you want to expose to the template
-[assembly: InternalsVisibleTo("RazorTemplateAssembly")]
-```
-
-### IDE support
-
-In order to have code completion inside a template, you need to let the IDE know what type of model it expects. In regular Razor templates you would do that via the `@model` directive, however with MiniRazor you need to use `@inherits` instead:
-
-```razor
-@inherits MiniRazor.MiniRazorTemplateBase<MyModel>
-
-<p>Statically-typed model: @Model.Foo</p>
+// Unload the ALC once it's no longer needed
+alc.Unload();
 ```
 
 ### HTML encoding
@@ -105,15 +128,4 @@ Output rendered with Razor templates is HTML-encoded by default. If you want to 
 
 @GetHtml() // &lt;p&gt;Hello world!&lt;/p&gt; 
 @Raw(GetHtml()) // <p>Hello world!</p>
-```
-
-### Parent assembly
-
-The `MiniRazorTemplateEngine` object has a `ParentAssembly` property, which is used to determine the compilation context for the templates. Any assembly referenced by the parent assembly is also referenced by the template assembly.
-
-By default, the parent assembly is resolved as the assembly that called the `MiniRazorTemplateEngine` constructor, but you can override this:
-
-```csharp
-var parent = Assembly.Load("...");
-var engine = new MiniRazorTemplateEngine(parent);
 ```
