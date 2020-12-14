@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.CodeAnalysis;
 
 namespace MiniRazor.Internal.Extensions
 {
@@ -20,14 +21,6 @@ namespace MiniRazor.Internal.Extensions
             }
         }
 
-        public static IEnumerable<AssemblyName> GetTransitiveAssemblies(this Assembly assembly)
-        {
-            var assemblyNames = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
-            assembly.PopulateTransitiveAssemblies(assemblyNames);
-
-            return assemblyNames;
-        }
-
         private static void PopulateTransitiveAssemblies(this Assembly assembly, ISet<AssemblyName> assemblyNames)
         {
             foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
@@ -41,5 +34,16 @@ namespace MiniRazor.Internal.Extensions
                     referencedAssembly.PopulateTransitiveAssemblies(assemblyNames);
             }
         }
+
+        public static IEnumerable<AssemblyName> GetTransitiveDependencies(this Assembly assembly)
+        {
+            var assemblyNames = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
+            assembly.PopulateTransitiveAssemblies(assemblyNames);
+
+            return assemblyNames;
+        }
+
+        public static MetadataReference ToMetadataReference(this Assembly assembly) =>
+            MetadataReference.CreateFromFile(assembly.Location);
     }
 }

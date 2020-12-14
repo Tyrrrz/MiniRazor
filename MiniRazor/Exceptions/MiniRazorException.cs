@@ -14,15 +14,14 @@ namespace MiniRazor.Exceptions
         /// <summary>
         /// Initializes an instance of <see cref="MiniRazorException"/>.
         /// </summary>
-        public MiniRazorException(string message)
-            : base(message)
-        {
-        }
+        public MiniRazorException(string message) : base(message) {}
     }
 
     public partial class MiniRazorException
     {
-        internal static MiniRazorException CompilationFailed(string generatedCode, IReadOnlyList<Diagnostic> diagnostics)
+        internal static MiniRazorException CompilationFailed(
+            string generatedCode,
+            IReadOnlyList<Diagnostic> diagnostics)
         {
             var buffer = new StringBuilder();
 

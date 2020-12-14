@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -8,6 +9,9 @@ namespace MiniRazor.Internal.Extensions
 {
     internal static class TypeExtensions
     {
+        public static bool Implements(this Type type, Type interfaceType) =>
+            type.GetInterfaces().Contains(interfaceType);
+
         public static bool IsAnonymousType(this Type type) =>
             type.IsDefined(typeof(CompilerGeneratedAttribute)) &&
             type.Name.Contains("AnonymousType", StringComparison.Ordinal);
@@ -23,7 +27,7 @@ namespace MiniRazor.Internal.Extensions
                 if (obj != null && obj.GetType().IsAnonymousType())
                     obj = obj.ToExpando();
 
-                expandoMap.Add(property.Name, obj);
+                expandoMap[property.Name] = obj;
             }
 
             return expando;

@@ -1,7 +1,9 @@
-﻿namespace MiniRazor.Primitives
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MiniRazor
 {
     /// <summary>
-    /// Wraps a string and instructs the renderer to treat it without encoding.
+    /// Wraps a string and instructs the renderer to avoid encoding it.
     /// </summary>
     public readonly struct RawString
     {
@@ -16,6 +18,7 @@
         public RawString(string value) => Value = value;
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         public override string ToString() => Value;
     }
 }

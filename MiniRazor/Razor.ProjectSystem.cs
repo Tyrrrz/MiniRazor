@@ -5,26 +5,10 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 
-namespace MiniRazor.Internal
+namespace MiniRazor
 {
-    [ExcludeFromCodeCoverage]
-    internal partial class EmptyRazorProjectFileSystem : RazorProjectFileSystem
+    public static partial class Razor
     {
-        public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
-            Enumerable.Empty<RazorProjectItem>();
-
-        [Obsolete("Use GetItem(string path, string fileKind) instead.")]
-        public override RazorProjectItem GetItem(string path) =>
-            GetItem(path, null);
-
-        public override RazorProjectItem GetItem(string path, string? fileKind) =>
-            new NotFoundProjectItem(string.Empty, path, fileKind);
-    }
-
-    internal partial class EmptyRazorProjectFileSystem
-    {
-        public static EmptyRazorProjectFileSystem Instance { get; } = new EmptyRazorProjectFileSystem();
-
         [ExcludeFromCodeCoverage]
         private class NotFoundProjectItem : RazorProjectItem
         {
@@ -46,6 +30,22 @@ namespace MiniRazor.Internal
             }
 
             public override Stream Read() => throw new NotSupportedException();
+        }
+
+        [ExcludeFromCodeCoverage]
+        private class EmptyRazorProjectFileSystem : RazorProjectFileSystem
+        {
+            public static EmptyRazorProjectFileSystem Instance { get; } = new EmptyRazorProjectFileSystem();
+
+            public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
+                Enumerable.Empty<RazorProjectItem>();
+
+            [Obsolete("Use GetItem(string path, string fileKind) instead.")]
+            public override RazorProjectItem GetItem(string path) =>
+                GetItem(path, null);
+
+            public override RazorProjectItem GetItem(string path, string? fileKind) =>
+                new NotFoundProjectItem(string.Empty, path, fileKind);
         }
     }
 }

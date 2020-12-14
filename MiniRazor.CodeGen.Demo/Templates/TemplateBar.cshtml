@@ -1,0 +1,18 @@
+﻿@using System
+@namespace MiniRazor.CodeGen.Demo.Templates
+
+@{
+    int GetDaysSinceUnixEpoch() => (int) (DateTimeOffset.Now - DateTimeOffset.UnixEpoch).TotalDays;
+}
+
+<html>
+
+<head>
+    <title>Useless information</title>
+</head>
+
+<body>
+    <p>@GetDaysSinceUnixEpoch() days have passed since the Unix epoch</p>
+</body>
+
+</html>

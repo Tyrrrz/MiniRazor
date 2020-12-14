@@ -17,12 +17,12 @@ jobs:
       - name: Install .NET (v2.1)
         uses: actions/setup-dotnet@v1.7.2
         with:
-          dotnet-version: 2.1.809
+          dotnet-version: 2.1.x
 
       - name: Install .NET (v5.0)
         uses: actions/setup-dotnet@v1.7.2
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 5.0.x
 
       - name: Build & test (.NET v2.1)
         # Doesn't support test loggers

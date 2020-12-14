@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.Loader;
+using System.Threading.Tasks;
 using FluentAssertions;
 using MiniRazor.Exceptions;
 using Xunit;
@@ -13,54 +14,45 @@ namespace MiniRazor.Tests
         public CompilationSpecs(ITestOutputHelper testOutput) => _testOutput = testOutput;
 
         [Fact]
-        public void I_can_compile_a_template_and_get_an_error_if_it_is_invalid()
+        public void Compiling_a_template_throws_an_exception_if_it_is_invalid()
         {
-            // Arrange
-            using var engine = new MiniRazorTemplateEngine();
-
             // Act & assert
             var ex = Assert.Throws<MiniRazorException>(() =>
-                engine.Compile("@Xyz")
+                Razor.Compile("@Xyz")
             );
 
             _testOutput.WriteLine(ex.Message);
         }
 
         [Fact]
-        public async Task I_can_compile_multiple_templates_using_the_same_engine()
+        public async Task Multiple_templates_can_be_compiled_independently()
         {
-            // Arrange
-            using var engine = new MiniRazorTemplateEngine();
-
             // Act
-            var template1 = engine.Compile("Hello, @Model.Foo!");
-            var template2 = engine.Compile("Goodbye, @Model.Bar...");
+            var template1 = Razor.Compile("Hello, @Model.Foo!");
+            var template2 = Razor.Compile("Goodbye, @Model.Bar...");
 
+            // Assert
             var result1 = await template1.RenderAsync(new {Foo = "World"});
             var result2 = await template2.RenderAsync(new {Bar = "Meagerness"});
 
-            // Assert
             result1.Should().Be("Hello, World!");
             result2.Should().Be("Goodbye, Meagerness...");
         }
 
+#if NET5_0
         [Fact]
-        public async Task I_can_compile_multiple_templates_using_different_engines()
+        public async Task Template_can_be_compiled_with_a_custom_assembly_load_context()
         {
             // Arrange
-            using var engine1 = new MiniRazorTemplateEngine();
-            using var engine2 = new MiniRazorTemplateEngine();
+            var assemblyLoadContext = new AssemblyLoadContext(null, true);
 
             // Act
-            var template1 = engine1.Compile("Hello, @Model.Foo!");
-            var template2 = engine2.Compile("Goodbye, @Model.Bar...");
-
-            var result1 = await template1.RenderAsync(new {Foo = "World"});
-            var result2 = await template2.RenderAsync(new {Bar = "Meagerness"});
+            var template = Razor.Compile("Hello world!", assemblyLoadContext);
 
             // Assert
-            result1.Should().Be("Hello, World!");
-            result2.Should().Be("Goodbye, Meagerness...");
+            var result = await template.RenderAsync();
+            result.Should().Be("Hello world!");
         }
+#endif
     }
 }
