@@ -2,11 +2,10 @@
 
 // Polyfills to bridge the missing APIs in older versions of the framework/standard.
 
+#if NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-#if NETSTANDARD2_0
 
 internal static partial class PolyfillExtensions
 {

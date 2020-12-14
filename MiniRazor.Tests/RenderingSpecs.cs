@@ -53,7 +53,7 @@ namespace MiniRazor.Tests
             var template = Razor.Compile("@{ int GetNumber() => 42; }@GetNumber()");
 
             // Act
-            var result = await template.RenderAsync();
+            var result = await template.RenderAsync(null);
 
             // Assert
             result.Should().Be("42");

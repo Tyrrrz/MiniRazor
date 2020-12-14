@@ -24,7 +24,7 @@ namespace MiniRazor.CodeGen.Demo
             Console.WriteLine(result);
 
             Console.WriteLine("### TemplateBar");
-            await TemplateBar.RenderAsync(Console.Out);
+            await TemplateBar.RenderAsync(Console.Out, null);
         }
     }
 }

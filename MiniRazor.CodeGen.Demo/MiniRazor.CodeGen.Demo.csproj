@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -14,7 +15,7 @@
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
     <AdditionalFiles Include="Templates/TemplateBar.cshtml" IsRazorTemplate="true" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\MiniRazor\MiniRazor.csproj" />
     <ProjectReference Include="..\MiniRazor.CodeGen\MiniRazor.CodeGen.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />

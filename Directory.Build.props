@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <Authors>$(Company)</Authors>
-    <PackageTags>razor template engine cshtml</PackageTags>
+    <PackageTags>razor template engine cshtml codegen code generation source generators</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/MiniRazor</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/MiniRazor/blob/master/Changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

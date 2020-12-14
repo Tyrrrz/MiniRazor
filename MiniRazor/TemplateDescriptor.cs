@@ -25,16 +25,15 @@ namespace MiniRazor
         /// <summary>
         /// Renders the template using the specified writer.
         /// </summary>
-        public async Task RenderAsync(TextWriter output, object? model = null)
+        public async Task RenderAsync(TextWriter output, object? model)
         {
             var template = CreateTemplateInstance();
 
-            var actualModel = model?.GetType().IsAnonymousType() == true
+            template.Output = output;
+
+            template.Model = model?.GetType().IsAnonymousType() == true
                 ? model.ToExpando()
                 : model;
-
-            template.Model = actualModel;
-            template.Output = output;
 
             await template.ExecuteAsync();
         }
@@ -42,7 +41,7 @@ namespace MiniRazor
         /// <summary>
         /// Renders the template to a string.
         /// </summary>
-        public async Task<string> RenderAsync(object? model = null)
+        public async Task<string> RenderAsync(object? model)
         {
             using var output = new StringWriter();
             await RenderAsync(output, model);

@@ -50,7 +50,7 @@ namespace MiniRazor.Tests
             var template = Razor.Compile("Hello world!", assemblyLoadContext);
 
             // Assert
-            var result = await template.RenderAsync();
+            var result = await template.RenderAsync(null);
             result.Should().Be("Hello world!");
         }
 #endif

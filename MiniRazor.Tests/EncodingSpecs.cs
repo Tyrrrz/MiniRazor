@@ -39,7 +39,7 @@ namespace MiniRazor.Tests
             var template = Razor.Compile("@(\"<div id='foo'>bar</div>\")");
 
             // Act
-            var result = await template.RenderAsync();
+            var result = await template.RenderAsync(null);
 
             // Assert
             result.Should().Be("&lt;div id=&#39;foo&#39;&gt;bar&lt;/div&gt;");
@@ -52,7 +52,7 @@ namespace MiniRazor.Tests
             var template = Razor.Compile("@Raw(\"<div id='foo'>bar</div>\")");
 
             // Act
-            var result = await template.RenderAsync();
+            var result = await template.RenderAsync(null);
 
             // Assert
             result.Should().Be("<div id='foo'>bar</div>");
