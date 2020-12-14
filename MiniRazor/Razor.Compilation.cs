@@ -38,7 +38,7 @@ namespace MiniRazor
                     .ToMetadataReference();
 
                 yield return assemblyLoadContext
-                    .LoadFromAssemblyName(typeof(Razor).Assembly.GetName())
+                    .LoadFromAssemblyName(typeof(TemplateBase<>).Assembly.GetName())
                     .ToMetadataReference();
 
                 yield return assemblyLoadContext
