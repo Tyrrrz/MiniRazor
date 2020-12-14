@@ -1,3 +1,8 @@
+### v2.0 (15-Dec-2020)
+
+- Reworked the library. Please refer to the readme for updated usage instructions.
+- Implemented support for build time template compilation via C# source generators.
+
 ### v1.1 (05-Aug-2020)
 
 - Added assembly unloading.
