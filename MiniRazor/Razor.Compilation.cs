@@ -18,11 +18,13 @@ namespace MiniRazor
             AssemblyLoadContext assemblyLoadContext,
             Assembly parentAssembly)
         {
-            void PopulateTransitiveDependencies(Assembly assembly, ICollection<AssemblyName> assemblyNames)
+            void PopulateTransitiveDependencies(Assembly assembly, ISet<AssemblyName> assemblyNames)
             {
                 foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
                 {
-                    assemblyNames.Add(referencedAssemblyName);
+                    // Avoid doing the same work twice
+                    if (!assemblyNames.Add(referencedAssemblyName))
+                        continue;
 
                     var referencedAssembly = assemblyLoadContext.LoadFromAssemblyName(referencedAssemblyName);
                     PopulateTransitiveDependencies(referencedAssembly, assemblyNames);
