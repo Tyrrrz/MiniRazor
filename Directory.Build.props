@@ -9,15 +9,6 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Authors>$(Company)</Authors>
-    <PackageTags>razor template engine cshtml codegen code generation source generators</PackageTags>
-    <PackageProjectUrl>https://github.com/Tyrrrz/MiniRazor</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/Tyrrrz/MiniRazor/blob/master/Changelog.md</PackageReleaseNotes>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
-
   <!-- Disable nullability warnings on older frameworks because there is no nullability info for BCL -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Nullable>annotations</Nullable>
