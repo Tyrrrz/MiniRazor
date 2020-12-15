@@ -14,7 +14,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CopyAnalyzerToPackage</TargetsForTfmSpecificContentInPackage>    
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CopyAnalyzerToPackage</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="5.0.1" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
     <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" PrivateAssets="all" />
     <PackageReference Include="Fody" Version="6.3.0" PrivateAssets="all" />
@@ -43,6 +43,7 @@
   <Target Name="CopyAnalyzerToPackage">
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutDir)/MiniRazor.CodeGen.dll" PackagePath="analyzers/dotnet/cs" BuildAction="none" />
+      <TfmSpecificPackageFile Include="$(PKGMicrosoft_AspNetCore_Razor_Language)\lib\netstandard2.0\*.dll" PackagePath="analyzers/dotnet/cs" BuildAction="none" />
     </ItemGroup>
   </Target>
 
