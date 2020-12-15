@@ -76,8 +76,8 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
             foreach (var file in context.AdditionalFiles)
             {
                 var isRazorTemplate = string.Equals(
-                    context.AnalyzerConfigOptions.GetOptions(file).TryGetAdditionalFileMetadataValue("IsRazorTemplate"),
-                    "true",
+                    Path.GetExtension(file.Path),
+                    ".cshtml",
                     StringComparison.OrdinalIgnoreCase
                 );
 
@@ -91,6 +91,8 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
 
                 ProcessFile(context, file.Path, content!);
             }
+            
+            context.AddSource("Foo", "namespace MiniRazor.CodeGen.Demo { public class Maarten { } }");
         }
 
         /// <inheritdoc />

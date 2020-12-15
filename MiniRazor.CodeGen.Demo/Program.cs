@@ -25,6 +25,10 @@ namespace MiniRazor.CodeGen.Demo
 
             Console.WriteLine("### TemplateBar");
             await TemplateBar.RenderAsync(Console.Out, null);
+            
+            Console.WriteLine("Awesome!");
+
+            var khalid = new Maarten();
         }
     }
 }
