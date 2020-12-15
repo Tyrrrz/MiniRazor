@@ -5,19 +5,23 @@
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsRazorTemplate" Visible="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
-    <AdditionalFiles Include="Templates/TemplateBar.cshtml" IsRazorTemplate="true" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\MiniRazor\MiniRazor.csproj" />
     <ProjectReference Include="..\MiniRazor.CodeGen\MiniRazor.CodeGen.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Templates\TemplateBar.cshtml" />
+    <AdditionalFiles Include="Templates\TemplateFoo.cshtml" />
+  </ItemGroup>
+
 
 </Project>

@@ -19,10 +19,10 @@ namespace MiniRazor.CodeGen.Demo
             // with the @inherits directive specified in the template.
 
             var result = await TemplateFoo.RenderAsync("John");
-
+            
             Console.WriteLine("### TemplateFoo");
             Console.WriteLine(result);
-
+            
             Console.WriteLine("### TemplateBar");
             await TemplateBar.RenderAsync(Console.Out);
         }

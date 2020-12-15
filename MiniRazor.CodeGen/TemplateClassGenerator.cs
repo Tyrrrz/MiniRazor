@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using MiniRazor.CodeGen.Internal.Extensions;
 
 namespace MiniRazor.CodeGen
@@ -59,10 +60,10 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
             // Insert the extension code somewhere into the generated class
             code = code.Insert(
                 code.IndexOf("public async override", StringComparison.Ordinal),
-                extensionCode + Environment.NewLine
+                extensionCode + "\n"
             );
 
-            context.AddSource(className, code);
+            context.AddSource(className, SourceText.From(code, Encoding.UTF8));
         }
 
         /// <inheritdoc />
@@ -70,20 +71,17 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
         {
             foreach (var file in context.AdditionalFiles)
             {
-                var isRazorTemplate = string.Equals(
-                    context.AnalyzerConfigOptions.GetOptions(file).TryGetAdditionalFileMetadataValue("IsRazorTemplate"),
-                    "true",
-                    StringComparison.OrdinalIgnoreCase
-                );
-
+                var isRazorTemplate = string
+                    .Compare(".cshtml", Path.GetExtension(file.Path), StringComparison.OrdinalIgnoreCase) == 0;
+            
                 if (!isRazorTemplate)
                     continue;
-
+            
                 var content = file.GetText(context.CancellationToken)?.ToString();
-
+            
                 if (string.IsNullOrWhiteSpace(content))
                     continue;
-
+            
                 ProcessFile(context, file.Path, content!);
             }
         }
