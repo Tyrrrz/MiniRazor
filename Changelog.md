@@ -1,3 +1,7 @@
+### v2.0.1 (15-Dec-2020)
+
+- Fixed a build error that occurred when attempting to use MiniRazor's source generator.
+
 ### v2.0 (15-Dec-2020)
 
 - Reworked the library. Please refer to the readme for updated usage instructions.
