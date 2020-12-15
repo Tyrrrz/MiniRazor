@@ -74,10 +74,10 @@ namespace MiniRazor
         /// Begins writing attribute.
         /// </summary>
         protected void BeginWriteAttribute(
-            string name,
-            string prefix,
+            string? name,
+            string? prefix,
             int prefixOffset,
-            string suffix,
+            string? suffix,
             int suffixOffset,
             int attributeValuesCount)
         {
@@ -89,9 +89,9 @@ namespace MiniRazor
         /// Writes attribute value.
         /// </summary>
         protected void WriteAttributeValue(
-            string prefix,
+            string? prefix,
             int prefixOffset,
-            object value,
+            object? value,
             int valueOffset,
             int valueLength,
             bool isLiteral)

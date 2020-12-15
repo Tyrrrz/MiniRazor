@@ -62,7 +62,10 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
 ");
 
             // Disable nullability checks on the entire file
-            code = code.Insert(0, "#nullable disable" + Environment.NewLine);
+            code = code
+                .Replace("#nullable restore", "")
+                .Replace("#nullable disable", "")
+                .Insert(0, "#nullable disable" + Environment.NewLine);
 
             context.AddSource(className, code);
         }
