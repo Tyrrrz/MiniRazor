@@ -1,3 +1,7 @@
+### v2.0.3 (15-Dec-2020)
+
+- Fixed more issues in generated code.
+
 ### v2.0.2 (15-Dec-2020)
 
 - Added `#nullable disable` to generated code.
