@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/nuget/dt/MiniRazor.svg)](https://nuget.org/packages/MiniRazor)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
-**Project status: maintenance mode** (bug fixes only).
+⚠️ **Project status: maintenance mode** (bug fixes only).
 
 MiniRazor is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both at build time and at run time.
 
