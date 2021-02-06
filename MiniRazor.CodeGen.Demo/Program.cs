@@ -15,7 +15,7 @@ namespace MiniRazor.CodeGen.Demo
             // You can use the static RenderAsync method to render
             // the template against a model.
 
-            // Note that the model is statically-typed and aligned
+            // Note that the model is statically typed and aligned
             // with the @inherits directive specified in the template.
 
             var result = await TemplateFoo.RenderAsync("John");
