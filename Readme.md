@@ -14,22 +14,14 @@ MiniRazor is a tiny abstraction over the Razor engine, designed to provide a sim
 
 - [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor`
 
-## Features
-
-- Can be used to compile and render templates at run time
-- Can be used to compile templates at build time and render them at runtime
-- Simple interface, designed for ease of use
-- Works with regular models, dynamic and anonymous objects
-- No dependency on `Microsoft.AspNetCore.App` shared framework or runtime
-- Targets .NET Standard 2.0+
-
 ## Usage
 
-### Compile templates at build time
+### Compiling templates at build time
 
-In most cases, you will want to compile templates at build time. This is suitable and highly recommended for scenarios where your templates are not expected to change.
+MiniRazor comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
+This workflow is suitable and highly recommended for scenarios where your templates are not expected to change.
 
-To do that, first create a Razor template similar to this one:
+To do that, first create a Razor template as shown here:
 
 ```razor
 @inherits MiniRazor.TemplateBase<string>
@@ -48,10 +40,13 @@ To do that, first create a Razor template similar to this one:
 </html>
 ```
 
-Note the usage of `@inherits` and `@namespace` directives:
+Note the usage of two important directives at the top of the file:
 
-- `@inherits` directive indicates that the base type of this template is `MiniRazor.TemplateBase<TModel>`, with the model of type `string`. If this directive is not included, the template will by default inherit from `MiniRazor.TemplateBase<dynamic>`, which doesn't provide intellisense support and type-safety when working with the model.
-- `@namespace` directive instructs the compiler to put the generated class into the `MyNamespace.Templates` namespace. If this directive is omitted, the default namespace of `MiniRazor.GeneratedTemplates` is used instead.
+- `@inherits` directive indicates that the base type of this template is `MiniRazor.TemplateBase<TModel>`, with the model of type `string`.
+  If this directive is not included, the template will instead inherit from `MiniRazor.TemplateBase<dynamic>` by default, which doesn't offer the same level of type-safety when working with the model.
+  
+- `@namespace` directive instructs the compiler to put the generated class into the `MyNamespace.Templates` namespace.
+  If this directive is omitted, the default namespace of `MiniRazor.GeneratedTemplates` will be used instead.
 
 In order to make the template accessible by MiniRazor's source generator, you need to add it to the project as `AdditionalFiles` and mark it with the `IsRazorTemplate="true"` attribute:
 
@@ -64,7 +59,11 @@ In order to make the template accessible by MiniRazor's source generator, you ne
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Include a single template -->
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
+    
+    <!-- Optional: Include multiple templates at once -->
+    <AdditionalFiles Include="Templates/*.cshtml" IsRazorTemplate="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,7 +73,9 @@ In order to make the template accessible by MiniRazor's source generator, you ne
 </Project>
 ```
 
-Once that's done, you can run `dotnet build` to build the project and trigger the source generator. Given that the template's file name is `TemplateFoo.cshtml`, you should be able to access the generated class via `MyNamespace.Templates.TemplateFoo` and render it by calling the static `RenderAsync(...)` method:
+Once that's done, you should be able to run `dotnet build` to build the project and trigger the source generator.
+Given that the template's file name is `TemplateFoo.cshtml`, the generated class should be accessible as `MyNamespace.Templates.TemplateFoo`.
+To render it, you can call the `RenderAsync(...)` static method:
 
 ```csharp
 // Reference the namespace where the template is located
@@ -87,11 +88,13 @@ var output = await TemplateFoo.RenderAsync("world");
 await TemplateFoo.RenderAsync(Console.Out, "world");
 ```
 
-Note that the type of the `model` parameter in `RenderAsync(...)` is inferred from the `@inherits` directive in the template. Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the method expects a parameter of type `string`.
+Note that the type of the `model` parameter in `RenderAsync(...)` is automatically inferred from the `@inherits` directive specified in the template.
+Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the method expects a parameter of type `string`.
 
-### Compile templates at run time
+### Compiling templates at run time
 
-If the previous approach doesn't fit your usage scenario, you can also compile templates at runtime. To do that, simply call `Razor.Compile(...)` with the template's source code:
+If the previous approach doesn't fit your usage scenario, you can also compile templates at runtime.
+To do that, call `Razor.Compile(...)` with the template's source code:
 
 ```csharp
 // Compile the template into an in-memory assembly
@@ -102,9 +105,11 @@ var output = await template.RenderAsync(new MyModel { Subject = "World" });
 // <p>Hello, World!</p>
 ```
 
-Calling `Razor.Compile(...)` compiles the supplied Razor code directly into IL loaded in-memory. The returned object can then be used to render output.
+Calling `Razor.Compile(...)` compiles the supplied Razor code directly into IL loaded in-memory.
+The object returned by this method can then be used to render output.
 
-Note that, by default, MiniRazor uses the default assembly load context, which means that, once compiled, the templates will stay in memory forever. To avoid that, you can pass a custom instance of `AssemblyLoadContext` instead:
+By default, MiniRazor uses the default assembly load context, which means that, once compiled, the generated IL code will stay in memory forever.
+To avoid that, you can pass a custom instance of `AssemblyLoadContext` to control the lifetime of generated assemblies:
 
 ```csharp
 // Create an isolated assembly load context
@@ -119,7 +124,8 @@ alc.Unload();
 
 ### HTML encoding
 
-Output rendered with Razor templates is HTML-encoded by default. If you want to print raw HTML content, for example if it's sourced from somewhere else, you can use the `Raw()` method:
+Output rendered with Razor templates is HTML-encoded by default.
+If you want to print raw HTML content, for example if it's sourced from somewhere else, you can use the `Raw(...)` method:
 
 ```razor
 @{
