@@ -7,8 +7,8 @@ using System.Runtime.Loader;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using MiniRazor.Exceptions;
-using MiniRazor.Internal;
-using MiniRazor.Internal.Extensions;
+using MiniRazor.Utils;
+using MiniRazor.Utils.Extensions;
 
 namespace MiniRazor
 {

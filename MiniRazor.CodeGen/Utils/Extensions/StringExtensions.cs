@@ -1,4 +1,4 @@
-﻿namespace MiniRazor.CodeGen.Internal.Extensions
+﻿namespace MiniRazor.CodeGen.Utils.Extensions
 {
     internal static class StringExtensions
     {

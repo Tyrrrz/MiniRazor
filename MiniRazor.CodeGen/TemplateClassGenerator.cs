@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
-using MiniRazor.CodeGen.Internal.Extensions;
+using MiniRazor.CodeGen.Utils.Extensions;
 
 namespace MiniRazor.CodeGen
 {

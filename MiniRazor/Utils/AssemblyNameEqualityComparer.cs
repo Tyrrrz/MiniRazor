@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace MiniRazor.Internal
+namespace MiniRazor.Utils
 {
     internal class AssemblyNameEqualityComparer : IEqualityComparer<AssemblyName>
     {

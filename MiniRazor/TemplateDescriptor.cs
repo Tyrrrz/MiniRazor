@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using MiniRazor.Internal.Extensions;
+using MiniRazor.Utils.Extensions;
 
 namespace MiniRazor
 {
