@@ -12,7 +12,7 @@ MiniRazor is a tiny abstraction over the Razor engine, designed to provide a sim
 
 ## Download
 
-- [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor`
+📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor`
 
 ## Usage
 
@@ -67,7 +67,7 @@ In order to make the template accessible by MiniRazor's source generator, you ne
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MiniRazor" Version="xxx" />
+    <PackageReference Include="MiniRazor" Version="x.x.x" />
   </ItemGroup>
 
 </Project>
