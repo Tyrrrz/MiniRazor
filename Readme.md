@@ -108,7 +108,7 @@ var output = await template.RenderAsync(new MyModel { Subject = "World" });
 Calling `Razor.Compile(...)` transforms the provided Razor template directly into IL code and hosts it in a generated in-memory assembly.
 This returns an instance of `TemplateDescriptor`, which can then be used to render output against a model.
 
-By default, MiniRazor uses the default assembly load context, which means that, once compiled, the generated IL code will stay in memory forever.
+By default, MiniRazor uses the default assembly load context, which means that the compiled IL code will stay in memory forever.
 To avoid that, you can pass a custom instance of `AssemblyLoadContext` to control the lifetime of generated assemblies:
 
 ```csharp
