@@ -19,7 +19,7 @@ namespace MiniRazor
                 .Trim();
 
         // Consumed from CodeGen
-        internal static string ToCSharp(string source, Action<RazorProjectEngineBuilder>? configure = null)
+        internal static string ToCSharp(string source, string accessModifier, Action<RazorProjectEngineBuilder>? configure = null)
         {
             // For some reason Razor engine ignores @namespace directive if
             // the file system is not configured properly.
@@ -38,8 +38,7 @@ namespace MiniRazor
                     {
                         node.Modifiers.Clear();
 
-                        // Internal to allow referencing internal types inside
-                        node.Modifiers.Add("internal");
+                        node.Modifiers.Add(accessModifier);
 
                         // Partial to allow extension
                         node.Modifiers.Add("partial");
