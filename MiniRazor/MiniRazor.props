@@ -1,6 +1,6 @@
 ﻿<Project>
   <ItemGroup>
-	  <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsRazorTemplate" />
-	  <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="AccessModifier" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsRazorTemplate" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="AccessModifier" />
   </ItemGroup>
 </Project>
