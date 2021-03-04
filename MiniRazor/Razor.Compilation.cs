@@ -67,7 +67,7 @@ namespace MiniRazor
             IReadOnlyList<MetadataReference> references,
             AssemblyLoadContext assemblyLoadContext)
         {
-            var csharpCode = ToCSharp(source);
+            var csharpCode = ToCSharp(source, "internal");
             var csharpDocumentAst = CSharpSyntaxTree.ParseText(csharpCode);
 
             var csharpDocumentCompilation = CSharpCompilation.Create(
