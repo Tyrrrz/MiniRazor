@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsRazorTemplate" Visible="false" />
-	  <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="AccessModifier" Visible="false" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsRazorTemplate" Visible="false" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="AccessModifier" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
     <AdditionalFiles Include="Templates/TemplateBar.cshtml" IsRazorTemplate="true" />
-    <AdditionalFiles Include="Templates\TemplatePublicFoo.cshtml" IsRazorTemplate="true" AccessModifier="public" />
+    <AdditionalFiles Include="Templates/TemplatePublicFoo.cshtml" IsRazorTemplate="true" AccessModifier="public" />
   </ItemGroup>
 
   <ItemGroup>
