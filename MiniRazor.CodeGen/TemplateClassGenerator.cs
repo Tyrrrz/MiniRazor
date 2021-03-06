@@ -24,6 +24,16 @@ namespace MiniRazor.CodeGen
                 .Value
                 .NullIfWhiteSpace();
 
+        private static string? TryGetNamespace(string code) =>
+            Regex.Match(
+                    code,
+                    @"namespace (\S+)",
+                    RegexOptions.Multiline, TimeSpan.FromSeconds(1)
+                )
+                .Groups[1]
+                .Value
+                .NullIfWhiteSpace();
+
         private static string RemoveNullableDirectives(string code) =>
             Regex.Replace(
                 code,
@@ -53,6 +63,8 @@ namespace MiniRazor.CodeGen
 
             // Get model type from the template's base class
             var modelTypeName = TryGetModelTypeName(code, className) ?? "dynamic";
+
+            var @namespace = TryGetNamespace(code);
 
             // Disable nullability checks on the entire file
             code = RemoveNullableDirectives(code)
@@ -90,7 +102,7 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
 }}
 ");
 
-            context.AddSource(className, code);
+            context.AddSource(@namespace is not null ? $"{@namespace}.{className}" : className, code);
         }
 
         /// <inheritdoc />
