@@ -42,7 +42,7 @@ namespace MiniRazor
         /// </summary>
         protected void Write(string? str)
         {
-            if (str != null)
+            if (str is not null)
                 WriteLiteral(WebUtility.HtmlEncode(str));
         }
 

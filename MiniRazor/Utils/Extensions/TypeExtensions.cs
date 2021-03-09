@@ -24,7 +24,7 @@ namespace MiniRazor.Utils.Extensions
             foreach (var property in anonymousObject.GetType().GetTypeInfo().GetProperties())
             {
                 var obj = property.GetValue(anonymousObject);
-                if (obj != null && obj.GetType().IsAnonymousType())
+                if (obj is not null && obj.GetType().IsAnonymousType())
                     obj = obj.ToExpando();
 
                 expandoMap[property.Name] = obj;
