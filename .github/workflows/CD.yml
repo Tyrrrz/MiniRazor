@@ -18,10 +18,18 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
+      - name: Install NuGet
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.NUGET_TOKEN }}
+          nuget-version: '5.x'
+
       - name: Pack
         run: |
           dotnet nuget locals all --clear
-          dotnet pack --configuration Release
+          nuget pack MiniRazor.nuspec -OutputDirectory pack
+          dotnet pack --configuration Release --output pack
 
       - name: Deploy
-        run: dotnet nuget push MiniRazor/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+        run: /
+          dotnet nuget push pack/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}

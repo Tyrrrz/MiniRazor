@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <MiniRazorVersion>2.1.0</MiniRazorVersion>
+  </PropertyGroup>
+</Project>

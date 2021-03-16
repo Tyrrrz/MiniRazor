@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\Version.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <RestoreSources>$(RestoreSources);../pack;https://api.nuget.org/v3/index.json</RestoreSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MiniRazor.Runtime" Version="$(MiniRazorVersion)" OutputItemType="Analyzer" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <Import Project="$(PkgMiniRazor_Runtime)\build\MiniRazor.props" />
+
+  <ItemGroup>
+    <!-- Include a single template -->
+    <AdditionalFiles Include="SomeRzr.razor" IsRazorTemplate="true" />
+  </ItemGroup>
+
+</Project>

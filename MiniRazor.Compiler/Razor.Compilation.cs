@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using MiniRazor.Exceptions;
 using MiniRazor.Utils;
 using MiniRazor.Utils.Extensions;
+using MiniRazor;
 
 namespace MiniRazor
 {

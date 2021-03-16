@@ -1,0 +1,24 @@
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>MiniRazor</id>
+    <version>2.1.0</version>
+    <authors>Tyrrrz</authors>
+    <owners>Tyrrrz</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Tyrrrz/MiniRazor/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/Tyrrrz/MiniRazor/</projectUrl>
+    <iconUrl>https://github.com/Tyrrrz/MiniRazor/blob/master/favicon.png?raw=true</iconUrl>
+    <description>Portable Razor compiler and code generator</description>
+    <copyright>Copyright (C) Alexey Golub</copyright>
+    <tags>razor template engine cshtml codegen code generation source generators</tags>
+    <repository type="git" url="https://github.com/Tyrrrz/MiniRazor"/>
+    <dependencies>
+      <group>
+        <dependency id="MiniRazor.Runtime" version="2.1.0" include="All" />
+        <dependency id="MiniRazor.Compiler" version="2.1.0" include="All" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="MiniRazor.props" target="build\" />
+  </files>
+</package>
