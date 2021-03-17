@@ -32,4 +32,9 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="../favicon.png" Pack="true" PackagePath="" />
+    <None Include="../MiniRazor.props" Pack="true" PackagePath="build" Visible="false" />
+  </ItemGroup>
+
 </Project>

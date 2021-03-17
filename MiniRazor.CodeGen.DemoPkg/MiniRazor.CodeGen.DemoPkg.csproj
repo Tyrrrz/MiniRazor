@@ -11,10 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MiniRazor.Runtime" Version="$(MiniRazorVersion)" OutputItemType="Analyzer" GeneratePathProperty="true" />
+    <PackageReference Include="MiniRazor" Version="$(MiniRazorVersion)" OutputItemType="Analyzer" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <Import Project="$(PkgMiniRazor_Runtime)\build\MiniRazor.props" />
+  <Import Project="$(PkgMiniRazor)\build\MiniRazor.props" />
 
   <ItemGroup>
     <!-- Include a single template -->

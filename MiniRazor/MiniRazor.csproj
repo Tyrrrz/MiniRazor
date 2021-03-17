@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Pack">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NoBuild>true</NoBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiniRazor.Compiler\MiniRazor.Compiler.csproj" />
+    <ProjectReference Include="..\MiniRazor.Runtime\MiniRazor.Runtime.csproj" />
+  </ItemGroup>
+</Project>
