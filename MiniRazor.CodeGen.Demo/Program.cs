@@ -25,6 +25,9 @@ namespace MiniRazor.CodeGen.Demo
 
             Console.WriteLine("### TemplateBar");
             await TemplateBar.RenderAsync(Console.Out, null);
+
+            Console.WriteLine("### TemplateNoNamespace");
+            await TemplateNoNamespace.RenderAsync(Console.Out, null);
         }
     }
 }

@@ -1,12 +1,26 @@
 <Project>
 
+  <Import Project="Version.props" />
+
   <PropertyGroup>
-    <Version>2.0.3</Version>
+    <Version>$(MiniRazorVersion)</Version>
     <Company>Tyrrrz</Company>
     <Copyright>Copyright (C) Alexey Golub</Copyright>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <Authors>$(Company)</Authors>
+    <Description>Portable Razor compiler and code generator</Description>
+    <PackageTags>razor template engine cshtml codegen code generation source generators</PackageTags>
+    <PackageProjectUrl>https://github.com/Tyrrrz/MiniRazor</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/Tyrrrz/MiniRazor/blob/master/Changelog.md</PackageReleaseNotes>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <!-- Disable nullability warnings on older frameworks because there is no nullability info for BCL -->
@@ -17,5 +31,10 @@
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../favicon.png" Pack="true" PackagePath="" />
+    <None Include="../MiniRazor.props" Pack="true" PackagePath="build" Visible="false" />
+  </ItemGroup>
 
 </Project>

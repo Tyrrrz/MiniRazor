@@ -3,6 +3,8 @@ using FluentAssertions;
 using MiniRazor.Tests.Models;
 using Xunit;
 
+using MiniRazor;
+
 namespace MiniRazor.Tests
 {
     public class RenderingSpecs

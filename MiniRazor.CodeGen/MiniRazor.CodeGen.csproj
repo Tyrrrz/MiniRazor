@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="../MiniRazor/Razor.Transpiling.cs" Link="ref/Razor.Transpiling.cs" Visible="false" />
-    <Compile Include="../MiniRazor/Razor.ProjectSystem.cs" Link="ref/Razor.ProjectSystem.cs" Visible="false" />
+    <Compile Include="../MiniRazor.Compiler/Razor.Transpiling.cs" Link="ref/Razor.Transpiling.cs" Visible="false" />
+    <Compile Include="../MiniRazor.Compiler/Razor.ProjectSystem.cs" Link="ref/Razor.ProjectSystem.cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

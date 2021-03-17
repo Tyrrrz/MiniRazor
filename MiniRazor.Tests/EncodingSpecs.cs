@@ -2,6 +2,8 @@
 using FluentAssertions;
 using Xunit;
 
+using MiniRazor;
+
 namespace MiniRazor.Tests
 {
     public class EncodingSpecs

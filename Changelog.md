@@ -1,3 +1,8 @@
+### v2.1.0 (16-Mar-2021)
+
+- Change packages to prevent `Microsoft.AspNetCore.Razor.Language` from being a dependency for *compile time generation*. Fixes this [issue](https://github.com/Tyrrrz/MiniRazor/issues/6)
+- Better namespace reconstruction.
+
 ### v2.0.3 (15-Dec-2020)
 
 - Fixed more issues in generated code.

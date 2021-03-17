@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MiniRazor\MiniRazor.csproj" />
+    <ProjectReference Include="..\MiniRazor.Compiler\MiniRazor.Compiler.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,20 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor", "MiniRazor\MiniRazor.csproj", "{55199720-A2DF-4C70-A95F-9465F65011BE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor.Tests", "MiniRazor.Tests\MiniRazor.Tests.csproj", "{36926806-0E5D-4E94-9773-00506EA859E8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{DC63BCD7-20D4-4162-BF57-DF22D4974551}"
-ProjectSection(SolutionItems) = preProject
-	Directory.Build.props = Directory.Build.props
-	Changelog.md = Changelog.md
-	Readme.md = Readme.md
-	License.txt = License.txt
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		Changelog.md = Changelog.md
+		Directory.Build.props = Directory.Build.props
+		License.txt = License.txt
+		Readme.md = Readme.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor.CodeGen", "MiniRazor.CodeGen\MiniRazor.CodeGen.csproj", "{B731D6DF-B1BF-45AA-A41F-A2A71133FF6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.Runtime", "MiniRazor.Runtime\MiniRazor.Runtime.csproj", "{55199720-A2DF-4C70-A95F-9465F65011BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniRazor.CodeGen.Demo", "MiniRazor.CodeGen.Demo\MiniRazor.CodeGen.Demo.csproj", "{E9138E9A-16C0-4C0B-B43F-58E87675F20B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.Tests", "MiniRazor.Tests\MiniRazor.Tests.csproj", "{36926806-0E5D-4E94-9773-00506EA859E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.CodeGen", "MiniRazor.CodeGen\MiniRazor.CodeGen.csproj", "{B731D6DF-B1BF-45AA-A41F-A2A71133FF6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.CodeGen.Demo", "MiniRazor.CodeGen.Demo\MiniRazor.CodeGen.Demo.csproj", "{E9138E9A-16C0-4C0B-B43F-58E87675F20B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.Compiler", "MiniRazor.Compiler\MiniRazor.Compiler.csproj", "{6887D139-B53A-49B6-A81A-D7455DE341A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor", "MiniRazor\MiniRazor.csproj", "{A31B6650-5DEF-43BF-A5DD-C99597E9B852}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,5 +42,13 @@ Global
 		{E9138E9A-16C0-4C0B-B43F-58E87675F20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9138E9A-16C0-4C0B-B43F-58E87675F20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9138E9A-16C0-4C0B-B43F-58E87675F20B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6887D139-B53A-49B6-A81A-D7455DE341A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6887D139-B53A-49B6-A81A-D7455DE341A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6887D139-B53A-49B6-A81A-D7455DE341A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6887D139-B53A-49B6-A81A-D7455DE341A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A31B6650-5DEF-43BF-A5DD-C99597E9B852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A31B6650-5DEF-43BF-A5DD-C99597E9B852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A31B6650-5DEF-43BF-A5DD-C99597E9B852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A31B6650-5DEF-43BF-A5DD-C99597E9B852}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

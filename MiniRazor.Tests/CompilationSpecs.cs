@@ -1,9 +1,11 @@
 ﻿using System.Runtime.Loader;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MiniRazor.Exceptions;
 using Xunit;
 using Xunit.Abstractions;
+
+using MiniRazor;
+using MiniRazor.Exceptions;
 
 namespace MiniRazor.Tests
 {
