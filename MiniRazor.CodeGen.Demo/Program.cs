@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 // Generated classes respect the @namespace directive in the template
+using MiniRazor.CodeGen.Demo.Templates;
 
 namespace MiniRazor.CodeGen.Demo
 {
