@@ -12,7 +12,9 @@ MiniRazor is a tiny abstraction over the Razor engine, designed to provide a sim
 
 ## Download
 
-📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor`
+📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor` (runtime compilation & build-time compilation)
+📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (runtime compilation only)
+📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.Compiler` (build-time compilation only)
 
 ## Usage
 
@@ -95,6 +97,8 @@ If the previous approach doesn't fit your usage scenario, you can also compile t
 To do that, call `Razor.Compile(...)` with the template's source code:
 
 ```csharp
+using MiniRazor;
+
 // Compile the template into an in-memory assembly
 var template = Razor.Compile("<p>Hello, @Model.Subject!</p>");
 
