@@ -6,7 +6,6 @@
     <PackageIcon>favicon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Nullable>annotations</Nullable>
-    <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
