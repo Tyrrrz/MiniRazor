@@ -1,3 +1,7 @@
+### v2.1.1 (23-Mar-2021)
+
+- [CodeGen] Fixed an issue where the source generator didn't work because the package was missing some of the embedded binaries.
+
 ### v2.1 (23-Mar-2021)
 
 - Split MiniRazor package into additional specialized packages: (Thanks [@Kevin Gliewe](https://github.com/KevinGliewe))
