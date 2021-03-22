@@ -6,6 +6,9 @@
     <PackageIcon>favicon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Nullable>annotations</Nullable>
+    
+    <!-- This package has runtime dependencies so it should NOT be marked as development dependency! -->
+    <DevelopmentDependency>false</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
