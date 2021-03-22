@@ -4,17 +4,81 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using MiniRazor.Exceptions;
 using MiniRazor.Utils;
 using MiniRazor.Utils.Extensions;
-using MiniRazor;
 
 namespace MiniRazor
 {
-    public static partial class Razor
+    /// <summary>
+    /// Methods for transpiling and compiling of Razor templates.
+    /// </summary>
+    public static class Razor
     {
+        private static string? TryGetNamespace(string razorCode) =>
+            Regex.Matches(razorCode, @"^\@namespace\s+(.+)$", RegexOptions.Multiline, TimeSpan.FromSeconds(1))
+                .Cast<Match>()
+                .LastOrDefault()?
+                .Groups[1]
+                .Value
+                .Trim();
+
+        /// <summary>
+        /// Transpiles a Razor template into C# code.
+        /// </summary>
+        public static string Transpile(
+            string source,
+            string accessModifier,
+            Action<RazorProjectEngineBuilder>? configure = null)
+        {
+            // For some reason Razor engine ignores @namespace directive if
+            // the file system is not configured properly.
+            // So to work around it, we "parse" it ourselves.
+            var actualNamespace =
+                TryGetNamespace(source) ??
+                "MiniRazor.GeneratedTemplates";
+
+            var engine = RazorProjectEngine.Create(
+                RazorConfiguration.Default,
+                EmptyRazorProjectFileSystem.Instance,
+                options =>
+                {
+                    options.SetNamespace(actualNamespace);
+                    options.SetBaseType("MiniRazor.TemplateBase<dynamic>");
+
+                    options.ConfigureClass((_, node) =>
+                    {
+                        node.Modifiers.Clear();
+
+                        node.Modifiers.Add(accessModifier);
+
+                        // Partial to allow extension
+                        node.Modifiers.Add("partial");
+                    });
+
+                    configure?.Invoke(options);
+                }
+            );
+
+            var sourceDocument = RazorSourceDocument.Create(
+                source,
+                $"MiniRazor_GeneratedTemplate_{Guid.NewGuid()}.cs"
+            );
+
+            var codeDocument = engine.Process(
+                sourceDocument,
+                null,
+                Array.Empty<RazorSourceDocument>(),
+                Array.Empty<TagHelperDescriptor>()
+            );
+
+            return codeDocument.GetCSharpDocument().GeneratedCode;
+        }
+
         private static IReadOnlyList<MetadataReference> GetReferences(
             AssemblyLoadContext assemblyLoadContext,
             Assembly parentAssembly)
@@ -68,7 +132,7 @@ namespace MiniRazor
             IReadOnlyList<MetadataReference> references,
             AssemblyLoadContext assemblyLoadContext)
         {
-            var csharpCode = ToCSharp(source, "internal");
+            var csharpCode = Transpile(source, "internal");
             var csharpDocumentAst = CSharpSyntaxTree.ParseText(csharpCode);
 
             var csharpDocumentCompilation = CSharpCompilation.Create(

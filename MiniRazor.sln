@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{DC63BCD7-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.Runtime", "MiniRazor.Runtime\MiniRazor.Runtime.csproj", "{55199720-A2DF-4C70-A95F-9465F65011BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.Tests", "MiniRazor.Tests\MiniRazor.Tests.csproj", "{36926806-0E5D-4E94-9773-00506EA859E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.Compiler.Tests", "MiniRazor.Compiler.Tests\MiniRazor.Compiler.Tests.csproj", "{36926806-0E5D-4E94-9773-00506EA859E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniRazor.CodeGen", "MiniRazor.CodeGen\MiniRazor.CodeGen.csproj", "{B731D6DF-B1BF-45AA-A41F-A2A71133FF6F}"
 EndProject

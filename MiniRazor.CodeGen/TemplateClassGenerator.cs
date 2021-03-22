@@ -1,29 +1,23 @@
-﻿// #define ATTACH_DEBUGGER
-
-using System.Text;
+﻿using System.Text;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using MiniRazor.CodeGen.Utils.Extensions;
-using MiniRazor;
 
 namespace MiniRazor.CodeGen
 {
     [Generator]
     public partial class TemplateClassGenerator : ISourceGenerator
     {
-        private string _rootNamespace = "MiniRazor.GeneratedTemplates";
-        private string? _projectDir = null;
-
         private static readonly string GeneratorVersion =
             typeof(TemplateClassGenerator).Assembly.GetName().Version.ToString(3);
 
         private static string? TryGetModelTypeName(string code, string className) =>
             Regex.Match(
                     code,
-                    $@"\s*{Regex.Escape(className)}\s*:\s*MiniRazor\.TemplateBase<([^\{{]+)>\s*\r?\n",
+                    $@"\s*{Regex.Escape(className)}\s*:\s*MiniRazor\.TemplateBase<(.+)>",
                     RegexOptions.Multiline, TimeSpan.FromSeconds(1)
                 )
                 .Groups[1]
@@ -40,45 +34,30 @@ namespace MiniRazor.CodeGen
                 .Value
                 .NullIfWhiteSpace();
 
-        private static string RemoveNullableDirectives(string code) =>
+        private static string StripNullableDirectives(string code) =>
             Regex.Replace(
                 code,
                 @"^\s*#nullable\s+(restore|disable)\s*$", "",
                 RegexOptions.Multiline, TimeSpan.FromSeconds(1)
             );
 
-        private static string RemoveLineDirectives(string code) =>
+        private static string StripLineDirectives(string code) =>
             Regex.Replace(
                 code,
                 @"^\s*#line\s+.+$", "",
                 RegexOptions.Multiline, TimeSpan.FromSeconds(1)
             );
 
-        private void ProcessFile(GeneratorExecutionContext context, string filePath, string accessModifier, string content)
+        private void ProcessFile(
+            GeneratorExecutionContext context,
+            string filePath,
+            string accessModifier,
+            string content)
         {
-            string? backupNamespace = _rootNamespace;
-
-            // Reconstruct namespace from root-namespace and directory
-            if (_projectDir is not null)
-            {
-                var filePathDir = Path.GetFullPath(Path.GetDirectoryName(filePath));
-
-                // Continue only if file is inside the project dir structure
-                if (filePathDir.StartsWith(_projectDir))
-                {
-                    var relativeNamespace = filePathDir.Substring(_projectDir.Length);
-
-                    if (relativeNamespace.Length > 0)
-                        backupNamespace += "." + relativeNamespace;
-
-                    backupNamespace = SanitizeNamespace(backupNamespace);
-                }
-            }
-
             // Generate class name from file name
             var className = SanitizeIdentifier(Path.GetFileNameWithoutExtension(filePath));
 
-            var code = Razor.ToCSharp(content, accessModifier, _rootNamespace, backupNamespace, options =>
+            var code = Razor.Transpile(content, accessModifier, options =>
             {
                 options.ConfigureClass((_, node) =>
                 {
@@ -92,11 +71,11 @@ namespace MiniRazor.CodeGen
             var @namespace = TryGetNamespace(code);
 
             // Disable nullability checks on the entire file
-            code = RemoveNullableDirectives(code)
+            code = StripNullableDirectives(code)
                 .Insert(0, "#nullable disable" + Environment.NewLine);
 
             // Remove line mappings
-            code = RemoveLineDirectives(code);
+            code = StripLineDirectives(code);
 
             // Add documentation to the class
             code = code.Insert(code.IndexOf($"{accessModifier} partial class", StringComparison.Ordinal), $@"
@@ -127,26 +106,22 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
 }}
 ");
 
-            context.AddSource(@namespace is not null ? $"{@namespace}.{className}" : className, code);
+            var hintName = !string.IsNullOrWhiteSpace(@namespace)
+                ? @namespace + '.' + className
+                : className;
+
+            context.AddSource(hintName, code);
         }
 
         /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
-            _projectDir = context.GetMSBuildProperty("ProjectDir");
-
-            if (_projectDir is not null)
-                _projectDir = Path.GetFullPath(_projectDir);
-
-            _rootNamespace = 
-                context.GetMSBuildProperty("RootNamespace") ??
-                context.Compilation.AssemblyName ??
-                _rootNamespace;
-
             foreach (var file in context.AdditionalFiles)
             {
                 var isRazorTemplate = string.Equals(
-                    context.AnalyzerConfigOptions.GetOptions(file).TryGetAdditionalFileMetadataValue("IsRazorTemplate"),
+                    context.AnalyzerConfigOptions
+                        .GetOptions(file)
+                        .TryGetAdditionalFileMetadataValue("IsRazorTemplate"),
                     "true",
                     StringComparison.OrdinalIgnoreCase
                 );
@@ -155,33 +130,28 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
                     continue;
 
                 var content = file.GetText(context.CancellationToken)?.ToString();
-
                 if (string.IsNullOrWhiteSpace(content))
                     continue;
 
-                var accessModifier = context.AnalyzerConfigOptions.GetOptions(file).TryGetAdditionalFileMetadataValue("AccessModifier");
-                if (string.IsNullOrWhiteSpace(accessModifier)) accessModifier = "internal";
+                var accessModifier = context.AnalyzerConfigOptions
+                    .GetOptions(file)
+                    .TryGetAdditionalFileMetadataValue("AccessModifier") ?? "internal";
 
-                ProcessFile(context, file.Path, accessModifier!, content!);
+                ProcessFile(context, file.Path, accessModifier, content);
             }
         }
 
         /// <inheritdoc />
-        public void Initialize(GeneratorInitializationContext context) {
-#if DEBUG && ATTACH_DEBUGGER
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
-#endif 
+        public void Initialize(GeneratorInitializationContext context)
+        {
         }
     }
 
     public partial class TemplateClassGenerator
     {
-        private static string SanitizeIdentifier(string symbolName)
+        private static string SanitizeIdentifier(string identifier)
         {
-            var buffer = new StringBuilder(symbolName);
+            var buffer = new StringBuilder(identifier);
 
             // Must start with a letter or an underscore
             if (buffer.Length > 0 && buffer[0] != '_' && !char.IsLetter(buffer[0]))
@@ -192,29 +162,11 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
             // Replace all other prohibited characters with underscores
             for (var i = 0; i < buffer.Length; i++)
             {
-                if (buffer[i] != '_' && !char.IsLetterOrDigit(buffer[i]))
+                if (!char.IsLetterOrDigit(buffer[i]))
                     buffer[i] = '_';
             }
 
             return buffer.ToString();
-        }
-
-    private static string SanitizeNamespace(string symbolName) {
-            var buffer = new StringBuilder(symbolName);
-
-
-            for (var i = 0; i < buffer.Length; i++) {
-                // Replace directory separators with dots
-                if (buffer[i] == '/' || buffer[i] == '\\')
-                    buffer[i] = '.';
-
-                // Replace all other prohibited characters with underscores
-                else if (buffer[i] != '_' && buffer[i] != '.' && !char.IsLetterOrDigit(buffer[i]))
-                    buffer[i] = '_';
-            }
-
-            // Remove duplicated dots
-            return Regex.Replace(buffer.ToString(), @"\.\.+", ".").Trim('.');
         }
     }
 }

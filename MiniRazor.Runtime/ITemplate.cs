@@ -3,13 +3,24 @@ using System.Threading.Tasks;
 
 namespace MiniRazor
 {
-    // Non-generic template handle for easier consumption from reflection
+    /// <summary>
+    /// Non-generic handle for <see cref="TemplateBase{TModel}"/> to simplify usage from reflection.
+    /// </summary>
     public interface ITemplate
     {
+        /// <summary>
+        /// Template output.
+        /// </summary>
         TextWriter? Output { get; set; }
 
+        /// <summary>
+        /// Template model.
+        /// </summary>
         object? Model { get; set; }
 
+        /// <summary>
+        /// Executes the template.
+        /// </summary>
         Task ExecuteAsync();
     }
 }

@@ -1,11 +1,9 @@
 using System.Threading.Tasks;
 using FluentAssertions;
-using MiniRazor.Tests.Models;
+using MiniRazor.Compiler.Tests.Models;
 using Xunit;
 
-using MiniRazor;
-
-namespace MiniRazor.Tests
+namespace MiniRazor.Compiler.Tests
 {
     public class RenderingSpecs
     {

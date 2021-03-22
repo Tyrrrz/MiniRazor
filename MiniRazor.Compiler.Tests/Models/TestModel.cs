@@ -1,4 +1,4 @@
-﻿namespace MiniRazor.Tests.Models
+﻿namespace MiniRazor.Compiler.Tests.Models
 {
     public class TestModel
     {

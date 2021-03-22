@@ -7,16 +7,12 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
-  <ItemGroup>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsRazorTemplate" Visible="false" />
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="AccessModifier" Visible="false" />
-  </ItemGroup>
-
+  <!-- Import props file from codegen project to add compiler metadata (this isn't necessary when installing as NuGet) -->
+  <Import Project="../MiniRazor.CodeGen/MiniRazor.CodeGen.props" />
+  
   <ItemGroup>
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
     <AdditionalFiles Include="Templates/TemplateBar.cshtml" IsRazorTemplate="true" />
-    <AdditionalFiles Include="Templates/TemplateNoNamespace.cshtml" IsRazorTemplate="true" />
-    <AdditionalFiles Include="Templates/TemplatePublicFoo.cshtml" IsRazorTemplate="true" AccessModifier="public" />
   </ItemGroup>
 
   <ItemGroup>

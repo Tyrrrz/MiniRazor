@@ -1,17 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Pack">
 
+  <!-- This is a metapackage that links both MiniRazor.Compiler and MiniRazor.CodeGen -->
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Portable Razor compiler and code generator</Description>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <!-- This package has no binaries of its own -->
+  <PropertyGroup>
     <NoBuild>true</NoBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSymbols>false</IncludeSymbols>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <Import Project="..\Directory.Build.props" />
+  <ItemGroup>
+    <None Include="../favicon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MiniRazor.Compiler\MiniRazor.Compiler.csproj" />
-    <ProjectReference Include="..\MiniRazor.Runtime\MiniRazor.Runtime.csproj" />
+
+    <!-- Make all assets public because by default analyzer and build assets are not linked in transitive dependencies -->
+    <ProjectReference Include="..\MiniRazor.CodeGen\MiniRazor.CodeGen.csproj" PrivateAssets="none" />
   </ItemGroup>
+
 </Project>

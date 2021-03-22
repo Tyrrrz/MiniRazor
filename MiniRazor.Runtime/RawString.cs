@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace MiniRazor
 {
     /// <summary>
-    /// Wraps a string and instructs the renderer to avoid encoding it.
+    /// Contains a string value that is not meant to be encoded by the template renderer.
     /// </summary>
     public readonly struct RawString
     {

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 // Generated classes respect the @namespace directive in the template
-using MiniRazor.CodeGen.Demo.Templates;
 
 namespace MiniRazor.CodeGen.Demo
 {
@@ -25,9 +24,6 @@ namespace MiniRazor.CodeGen.Demo
 
             Console.WriteLine("### TemplateBar");
             await TemplateBar.RenderAsync(Console.Out, null);
-
-            Console.WriteLine("### TemplateNoNamespace");
-            await TemplateNoNamespace.RenderAsync(Console.Out, null);
         }
     }
 }

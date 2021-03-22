@@ -11,9 +11,7 @@ namespace MiniRazor
     {
         private string? _lastAttributeSuffix;
 
-        /// <summary>
-        /// Template output.
-        /// </summary>
+        /// <inheritdoc />
         public TextWriter? Output { get; set; }
 
         /// <summary>
@@ -109,9 +107,7 @@ namespace MiniRazor
             _lastAttributeSuffix = null;
         }
 
-        /// <summary>
-        /// Executes the template.
-        /// </summary>
+        /// <inheritdoc />
         public abstract Task ExecuteAsync();
     }
 }

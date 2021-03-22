@@ -2,12 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using MiniRazor.Utils.Extensions;
-using MiniRazor;
 
 namespace MiniRazor
 {
     /// <summary>
-    /// Represents a compiled Razor template that can render output.
+    /// Represents a compiled Razor template.
     /// </summary>
     public class TemplateDescriptor
     {

@@ -59,18 +59,15 @@ In order to make the template accessible by MiniRazor's source generator, you ne
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MiniRazor" Version="x.x.x" OutputItemType="Analyzer" GeneratePathProperty="true"/>
-  </ItemGroup>
-
-  <Import Project="$(PkgMiniRazor)\build\MiniRazor.props" />
-
-  <ItemGroup>
     <!-- Include a single template -->
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
-    
-    <!-- Optional: Include multiple templates at once -->
+
+    <!-- Include multiple templates at once -->
     <AdditionalFiles Include="Templates/*.cshtml" IsRazorTemplate="true" />
   </ItemGroup>
+
+  <!-- ... -->
+
 </Project>
 ```
 

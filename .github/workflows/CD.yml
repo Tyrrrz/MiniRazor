@@ -18,11 +18,15 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
+      - name: Reset NuGet locals
+        run: dotnet nuget locals all --clear
+
       - name: Pack
-        run: |
-          dotnet nuget locals all --clear
-          dotnet pack --configuration Release --output pack
+        run: dotnet pack --configuration Release
 
       - name: Deploy
         run: /
-          dotnet nuget push pack/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+          dotnet nuget push MiniRazor.Runtime/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+          dotnet nuget push MiniRazor.Compiler/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+          dotnet nuget push MiniRazor.CodeGen/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+          dotnet nuget push MiniRazor/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}

@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 namespace MiniRazor.Exceptions
 {
     /// <summary>
-    /// Exception which is thrown when an attempt to compile a Razor template has failed.
+    /// Exception thrown when an attempt to compile a Razor template fails.
     /// </summary>
     public partial class MiniRazorException : Exception
     {

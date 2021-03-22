@@ -7,7 +7,23 @@ using Microsoft.AspNetCore.Razor.Language;
 
 namespace MiniRazor
 {
-    public static partial class Razor
+    [ExcludeFromCodeCoverage]
+    internal partial class EmptyRazorProjectFileSystem : RazorProjectFileSystem
+    {
+        public static EmptyRazorProjectFileSystem Instance { get; } = new();
+
+        public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
+            Enumerable.Empty<RazorProjectItem>();
+
+        [Obsolete("Use GetItem(string path, string fileKind) instead.")]
+        public override RazorProjectItem GetItem(string path) =>
+            GetItem(path, null);
+
+        public override RazorProjectItem GetItem(string path, string? fileKind) =>
+            new NotFoundProjectItem(string.Empty, path, fileKind);
+    }
+
+    internal partial class EmptyRazorProjectFileSystem
     {
         [ExcludeFromCodeCoverage]
         private class NotFoundProjectItem : RazorProjectItem
@@ -30,22 +46,6 @@ namespace MiniRazor
             }
 
             public override Stream Read() => throw new NotSupportedException();
-        }
-
-        [ExcludeFromCodeCoverage]
-        private class EmptyRazorProjectFileSystem : RazorProjectFileSystem
-        {
-            public static EmptyRazorProjectFileSystem Instance { get; } = new();
-
-            public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
-                Enumerable.Empty<RazorProjectItem>();
-
-            [Obsolete("Use GetItem(string path, string fileKind) instead.")]
-            public override RazorProjectItem GetItem(string path) =>
-                GetItem(path, null);
-
-            public override RazorProjectItem GetItem(string path, string? fileKind) =>
-                new NotFoundProjectItem(string.Empty, path, fileKind);
         }
     }
 }
