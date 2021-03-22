@@ -4,11 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -23,9 +19,6 @@ jobs:
         uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: 5.0.x
-
-      - name: Reset NuGet locals
-        run: dotnet nuget locals all --clear
 
       - name: Build & test (.NET v2.1)
         # Doesn't support test loggers
