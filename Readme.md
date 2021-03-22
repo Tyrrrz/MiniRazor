@@ -12,9 +12,9 @@ MiniRazor is a tiny abstraction over the Razor engine, designed to provide a sim
 
 ## Download
 
-📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor` (runtime compilation & build-time compilation)
-📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (runtime compilation only)
-📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.Compiler` (build-time compilation only)
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor` (runtime compilation & build-time compilation)
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (runtime compilation only)
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.Compiler` (build-time compilation only)
 
 ## Usage
 
