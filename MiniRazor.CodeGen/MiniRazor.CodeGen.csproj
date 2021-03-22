@@ -32,8 +32,9 @@
 
   <!-- Source generators can't have NuGet dependencies, so we embed them inside the package -->
   <ItemGroup>
-    <None Include="$(OutputPath)/*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PKGMicrosoft_AspNetCore_Razor_Language)/lib/netstandard2.0/*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="../MiniRazor.Compiler/bin/$(Configuration)/$(TargetFramework)/MiniRazor.Compiler.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PKGMicrosoft_AspNetCore_Razor_Language)/lib/$(TargetFramework)/*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
