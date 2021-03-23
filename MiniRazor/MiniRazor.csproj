@@ -3,7 +3,7 @@
   <!-- This is a metapackage that links both MiniRazor.Compiler and MiniRazor.CodeGen -->
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
     <Description>Portable Razor compiler and code generator</Description>
     <PackageIcon>favicon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
