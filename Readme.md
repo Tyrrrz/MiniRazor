@@ -12,9 +12,14 @@ MiniRazor is a tiny abstraction over the Razor engine, designed to provide a sim
 
 ## Download
 
-- 📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor` (includes both MiniRazor.Compiler and MiniRazor.CodeGen)
-- 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (runtime compilation)
-- 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.CodeGen` (build time compilation)
+All-in-one meta package:
+
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor`
+  
+Specialized packages:
+
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (**runtime compilation** only)
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.CodeGen` (**build time compilation** only)
 
 > ⚠ If you're referencing MiniRazor.CodeGen, ensure that it's **NOT** added with `PrivateAssets="all"`!
 Although the source generator assembly itself is only used during build, this package also contains other binaries which are required by the generated code at runtime. 
@@ -23,7 +28,7 @@ Although the source generator assembly itself is only used during build, this pa
 
 ### Compiling templates at build time
 
-> Compiling at build time requires MiniRazor.CodeGen or MiniRazor
+> Compiling at build time requires MiniRazor.CodeGen
 
 MiniRazor comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
 This workflow is suitable and highly recommended for scenarios where your templates are not expected to change.
@@ -98,7 +103,7 @@ Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the m
 
 ### Compiling templates at runtime
 
-> Compiling at runtime requires MiniRazor.Compiler or MiniRazor
+> Compiling at runtime requires MiniRazor.Compiler
 
 If the previous approach doesn't fit your usage scenario, you can also compile templates at runtime.
 To do that, call `Razor.Compile(...)` with the template's source code:
