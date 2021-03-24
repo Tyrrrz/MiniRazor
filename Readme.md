@@ -21,8 +21,8 @@ Specialized packages:
 - 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (**runtime compilation** only)
 - 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.CodeGen` (**build time compilation** only)
 
-> ⚠ If you're referencing MiniRazor.CodeGen, ensure that it's **NOT** added with `PrivateAssets="all"`!
-Although the source generator assembly itself is only used during build, this package also contains other binaries which are required by the generated code at runtime. 
+> ⚠ If you're referencing MiniRazor.CodeGen, ensure that it's **NOT** marked with `PrivateAssets="all"`!
+Although the source generator assembly itself is only used during build, this package also contains binaries which are required by the generated code at runtime. 
 
 ## Usage
 
@@ -123,7 +123,7 @@ Calling `Razor.Compile(...)` transforms the provided Razor template directly int
 This returns an instance of `TemplateDescriptor`, which can then be used to render output against a model.
 
 By default, MiniRazor uses the default assembly load context, which means that the compiled IL code will stay in memory forever.
-To avoid that, you can pass a custom instance of `AssemblyLoadContext` to control the lifetime of generated assemblies:
+To avoid that, you can pass a custom instance of `AssemblyLoadContext` that lets you control the lifetime of generated assemblies:
 
 ```csharp
 // Create an isolated assembly load context
@@ -136,7 +136,9 @@ var template = Razor.Compile("<p>Hello, @Model.Subject!</p>", alc);
 alc.Unload();
 ```
 
-### HTML encoding
+### Templating features
+
+#### HTML encoding
 
 Output rendered with Razor templates is HTML-encoded by default.
 If you want to print raw HTML content, for example if it's sourced from somewhere else, you can use the `Raw(...)` method:
