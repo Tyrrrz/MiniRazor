@@ -7,9 +7,10 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
-  <!-- Import props file from codegen project to add compiler metadata (this isn't necessary when installing as NuGet) -->
+  <!-- Import props file from codegen project to add compiler metadata
+       (this isn't necessary when installing MiniRazor.CodeGen from NuGet) -->
   <Import Project="../MiniRazor.CodeGen/MiniRazor.CodeGen.props" />
-  
+
   <ItemGroup>
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />
     <AdditionalFiles Include="Templates/TemplateBar.cshtml" IsRazorTemplate="true" />

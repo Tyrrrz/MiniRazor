@@ -4,9 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Contains Roslyn source generator that transpiles Razor templates into C# classes</Description>
     <PackageIcon>favicon.png</PackageIcon>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Nullable>annotations</Nullable>
-    
+
     <!-- This package has runtime dependencies so it should NOT be marked as development dependency! -->
     <DevelopmentDependency>false</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -28,27 +27,27 @@
     <!-- Public dependency on MiniRazor.Runtime because it's required during runtime -->
     <ProjectReference Include="..\MiniRazor.Runtime\MiniRazor.Runtime.csproj" />
 
-    <!-- Private dependency on MiniRazor.Compiler because it's required only during compilation -->
+    <!-- Private dependency on MiniRazor.Compiler because it's required only during codegen -->
     <ProjectReference Include="..\MiniRazor.Compiler\MiniRazor.Compiler.csproj" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Source generators can't have NuGet dependencies, so we embed them inside the package -->
+  <!-- Source generators can't have public dependencies, so we have to embed them inside the package -->
   <ItemGroup>
     <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="../MiniRazor.Compiler/bin/$(Configuration)/$(TargetFramework)/MiniRazor.Compiler.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PKGMicrosoft_AspNetCore_Razor_Language)/lib/$(TargetFramework)/*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
-  <!-- These elements are needed to get the dependencies working when referenced via ProjectReference -->
-  <!-- (shouldn't be required for the NuGet package, only for MiniRazor.CodeGen.Demo) -->
+  <!-- These elements are needed to get the dependencies working when MiniRazor.CodeGen is referenced as project
+       (i.e. only for MiniRazor.CodeGen.Demo; shouldn't be required when referenced as NuGet package) -->
   <PropertyGroup>
     <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
   </PropertyGroup>
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Razor_Language)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="../MiniRazor.Compiler/bin/$(Configuration)/$(TargetFramework)/MiniRazor.Compiler.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Razor_Language)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 

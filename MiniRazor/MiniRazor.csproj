@@ -4,13 +4,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
-    <Description>Portable Razor compiler and code generator</Description>
     <PackageIcon>favicon.png</PackageIcon>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-  </PropertyGroup>
-
-  <!-- This package has no binaries of its own -->
-  <PropertyGroup>
     <NoBuild>true</NoBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSymbols>false</IncludeSymbols>
@@ -29,6 +23,13 @@
 
     <!-- Make all assets public because by default analyzer and build assets are not linked in transitive dependencies -->
     <ProjectReference Include="..\MiniRazor.CodeGen\MiniRazor.CodeGen.csproj" PrivateAssets="none" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Include an empty file for each TFM to indicate that the lack of binaries is intentional.
+         Context: https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128#solution-1 -->
+    <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0/" Visible="false" />
+    <None Include="_._" Pack="true" PackagePath="lib/netcoreapp3.0/" Visible="false" />
   </ItemGroup>
 
 </Project>

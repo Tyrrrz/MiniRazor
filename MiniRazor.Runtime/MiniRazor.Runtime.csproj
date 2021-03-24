@@ -6,9 +6,6 @@
     <Description>Contains runtime dependencies for MiniRazor.Compiler and MiniRazor.CodeGen</Description>
     <PackageIcon>favicon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <DebugType>embedded</DebugType>
     <Nullable>annotations</Nullable>
   </PropertyGroup>
 

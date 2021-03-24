@@ -3,12 +3,9 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;netstandard2.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>MiniRazor</RootNamespace>
-    <Description>Contains utilities for transpiling and compiling of Razor templates</Description>
+    <Description>Contains methods to transpile and compile Razor templates</Description>
     <PackageIcon>favicon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <!-- Disable nullability warnings on older frameworks because there is no nullability info for BCL -->

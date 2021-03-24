@@ -11,11 +11,15 @@
 
   <PropertyGroup>
     <Authors>$(Company)</Authors>
+    <Description>Portable Razor compiler and code generator</Description>
     <PackageTags>razor template engine cshtml codegen code generation source generators</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/MiniRazor</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/MiniRazor/blob/master/Changelog.md</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <!-- Note: ContinuousIntegrationBuild is not enabled because it breaks coverage reporting -->

@@ -15,7 +15,7 @@ using MiniRazor.Utils.Extensions;
 namespace MiniRazor
 {
     /// <summary>
-    /// Methods for transpiling and compiling of Razor templates.
+    /// Methods to transpile and compile Razor templates.
     /// </summary>
     public static class Razor
     {
