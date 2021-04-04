@@ -73,7 +73,7 @@ namespace MiniRazor.Compiler.Tests
         }
 
         [Fact]
-        public async Task Template_can_be_rendered_with_a_recursive_anonymous_model()
+        public async Task Template_can_be_rendered_with_a_complex_anonymous_model()
         {
             // Arrange
             var template = Razor.Compile("@Model.Foo, @Model.Bar.X, @Model.Bar.Y");
