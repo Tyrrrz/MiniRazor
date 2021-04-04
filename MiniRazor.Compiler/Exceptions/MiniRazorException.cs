@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
+using MiniRazor.Utils.Extensions;
 
 namespace MiniRazor.Exceptions
 {
@@ -23,23 +23,21 @@ namespace MiniRazor.Exceptions
             string generatedCode,
             IReadOnlyList<Diagnostic> diagnostics)
         {
-            var buffer = new StringBuilder();
-
-            buffer.AppendLine("Could not compile template. See below for a list of errors.");
-            buffer.AppendLine();
-
-            buffer.AppendLine("## Errors:");
-            buffer.AppendJoin(Environment.NewLine, diagnostics
+            var errors = diagnostics
                 .Where(d => d.Severity >= DiagnosticSeverity.Error)
                 .Select(d => d.ToString())
-            );
-            buffer.AppendLine();
-            buffer.AppendLine();
+                .ToArray();
 
-            buffer.AppendLine("## Generated source code:");
-            buffer.AppendLine(generatedCode);
+            var message = $@"
+Failed to compile template.
 
-            return new MiniRazorException(buffer.ToString());
+Error(s):
+{errors.Select(m => "- " + m).JoinToString(Environment.NewLine)}
+
+Generated source code:
+{generatedCode}";
+
+            return new MiniRazorException(message.Trim());
         }
     }
 }
