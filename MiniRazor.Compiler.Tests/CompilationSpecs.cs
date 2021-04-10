@@ -58,7 +58,7 @@ namespace MiniRazor.Compiler.Tests
         {
             // Act & assert
             var ex = Assert.Throws<MiniRazorException>(() =>
-                Razor.Compile("Hello @Xyz!")
+                Razor.Compile("Hello @Xyz @Foo!")
             );
 
             _testOutput.WriteLine(ex.Message);

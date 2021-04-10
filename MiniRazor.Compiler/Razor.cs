@@ -147,9 +147,22 @@ namespace MiniRazor
 
             if (!csharpDocumentCompilationResult.Success)
             {
-                throw MiniRazorException.CompilationFailed(
-                    csharpCode,
-                    csharpDocumentCompilationResult.Diagnostics
+                var errors = csharpDocumentCompilationResult
+                    .Diagnostics
+                    .Where(d => d.Severity >= DiagnosticSeverity.Error)
+                    .Select(d => d.ToString())
+                    .ToArray();
+
+                throw new MiniRazorException(
+                    "Failed to compile template." +
+                    Environment.NewLine + Environment.NewLine +
+                    "Error(s):" +
+                    Environment.NewLine +
+                    errors.Select(m => "- " + m).JoinToString(Environment.NewLine) +
+                    Environment.NewLine + Environment.NewLine +
+                    "Generated source code:" +
+                    Environment.NewLine +
+                    csharpCode
                 );
             }
 
