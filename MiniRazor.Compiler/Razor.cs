@@ -91,25 +91,26 @@ namespace MiniRazor
                     if (!assemblyNames.Add(referencedAssemblyName))
                         continue;
 
-                    var referencedAssembly = assemblyLoadContext.LoadFromAssemblyName(referencedAssemblyName);
-                    PopulateTransitiveDependencies(referencedAssembly, assemblyNames);
+                    var referencedAssembly = assemblyLoadContext.TryLoadFromAssemblyName(referencedAssemblyName);
+                    if (referencedAssembly is not null)
+                        PopulateTransitiveDependencies(referencedAssembly, assemblyNames);
                 }
             }
 
-            IEnumerable<MetadataReference> EnumerateReferences()
+            IEnumerable<MetadataReference?> EnumerateReferences()
             {
                 // Implicit references
 
                 yield return assemblyLoadContext
-                    .LoadFromAssemblyName(new AssemblyName("Microsoft.CSharp"))
+                    .TryLoadFromAssemblyName(new AssemblyName("Microsoft.CSharp"))?
                     .ToMetadataReference();
 
                 yield return assemblyLoadContext
-                    .LoadFromAssemblyName(typeof(TemplateBase<>).Assembly.GetName())
+                    .TryLoadFromAssemblyName(typeof(TemplateBase<>).Assembly.GetName())?
                     .ToMetadataReference();
 
                 yield return assemblyLoadContext
-                    .LoadFromAssemblyName(parentAssembly.GetName())
+                    .TryLoadFromAssemblyName(parentAssembly.GetName())?
                     .ToMetadataReference();
 
                 // References from parent assembly
@@ -119,12 +120,12 @@ namespace MiniRazor
                 foreach (var dependency in transitiveDependencies)
                 {
                     yield return assemblyLoadContext
-                        .LoadFromAssemblyName(dependency)
+                        .TryLoadFromAssemblyName(dependency)?
                         .ToMetadataReference();
                 }
             }
 
-            return EnumerateReferences().Distinct().ToArray();
+            return EnumerateReferences().WhereNotNull().Distinct().ToArray();
         }
 
         private static TemplateDescriptor Compile(
