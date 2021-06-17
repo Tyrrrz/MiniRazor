@@ -4,7 +4,6 @@
     <TargetFrameworks>netcoreapp3.0;netstandard2.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>MiniRazor</RootNamespace>
     <Description>Contains methods to transpile and compile Razor templates</Description>
-    <PackageIcon>favicon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -12,10 +11,6 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Nullable>annotations</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="../favicon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="5.0.4" />

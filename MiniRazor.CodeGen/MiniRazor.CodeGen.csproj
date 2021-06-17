@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Contains Roslyn source generator that transpiles Razor templates into C# classes</Description>
-    <PackageIcon>favicon.png</PackageIcon>
     <Nullable>annotations</Nullable>
 
     <!-- This package has runtime dependencies so it should NOT be marked as development dependency! -->
@@ -12,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../favicon.png" Pack="true" PackagePath="" />
     <None Include="MiniRazor.CodeGen.props" Pack="true" PackagePath="build" />
   </ItemGroup>
 

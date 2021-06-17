@@ -4,14 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>MiniRazor</RootNamespace>
     <Description>Contains runtime dependencies for MiniRazor.Compiler and MiniRazor.CodeGen</Description>
-    <PackageIcon>favicon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>annotations</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="../favicon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
