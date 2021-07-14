@@ -32,7 +32,7 @@ namespace MiniRazor
         /// </summary>
         public static string Transpile(
             string source,
-            string accessModifier,
+            string? accessModifier = null,
             Action<RazorProjectEngineBuilder>? configure = null)
         {
             // For some reason Razor engine ignores @namespace directive if
@@ -54,7 +54,9 @@ namespace MiniRazor
                     {
                         node.Modifiers.Clear();
 
-                        node.Modifiers.Add(accessModifier);
+                        // Null access modifier resolved to internal by default in C#
+                        if (!string.IsNullOrWhiteSpace(accessModifier))
+                            node.Modifiers.Add(accessModifier);
 
                         // Partial to allow extension
                         node.Modifiers.Add("partial");
@@ -133,7 +135,7 @@ namespace MiniRazor
             IReadOnlyList<MetadataReference> references,
             AssemblyLoadContext assemblyLoadContext)
         {
-            var csharpCode = Transpile(source, "internal");
+            var csharpCode = Transpile(source);
             var csharpDocumentAst = CSharpSyntaxTree.ParseText(csharpCode);
 
             var csharpDocumentCompilation = CSharpCompilation.Create(
