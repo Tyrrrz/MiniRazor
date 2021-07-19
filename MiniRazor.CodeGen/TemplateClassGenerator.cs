@@ -107,7 +107,7 @@ public static async global::System.Threading.Tasks.Task<string> RenderAsync({mod
 ");
 
             var hintName = !string.IsNullOrWhiteSpace(@namespace)
-                ? @namespace + '.' + className
+                ? $"{@namespace}.{className}.g.cs"
                 : className;
 
             context.AddSource(hintName, code);
