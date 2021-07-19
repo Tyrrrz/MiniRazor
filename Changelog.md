@@ -1,3 +1,7 @@
+### v2.1.4 (19-Jul-2021)
+
+- [Codegen] Fixed an issue where generated files included a checksum directive that referenced a non-existing file.
+
 ### v2.1.3 (19-Jul-2021)
 
 - [Codegen] Hint names for generated files now end with `.g.cs` to follow the generally accepted conventions. By extension, this also fixes an issue which caused Coverlet to fail when instrumenting assemblies that used MiniRazor's compile-time generation.
