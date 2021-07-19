@@ -34,6 +34,10 @@ namespace MiniRazor.CodeGen
                 .Value
                 .NullIfWhiteSpace();
 
+        // Checksum directive contains a file name which might not match the hint name
+        // of the generated file. This can cause issues where the PDB file might reference
+        // a compilation unit that doesn't actually exist. Also, the directive isn't very
+        // useful to us anyway so it's best to just remove it.
         private static string StripChecksumDirectives(string code) =>
             Regex.Replace(
                 code,
@@ -41,6 +45,7 @@ namespace MiniRazor.CodeGen
                 RegexOptions.Multiline, TimeSpan.FromSeconds(1)
             );
 
+        // Avoid nullability warnings in the generated code
         private static string StripNullableDirectives(string code) =>
             Regex.Replace(
                 code,
@@ -48,6 +53,7 @@ namespace MiniRazor.CodeGen
                 RegexOptions.Multiline, TimeSpan.FromSeconds(1)
             );
 
+        // Line directives may be useful but we're going to remove them for now
         private static string StripLineDirectives(string code) =>
             Regex.Replace(
                 code,
