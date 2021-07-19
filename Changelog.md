@@ -1,3 +1,12 @@
+### v2.1.3 (19-Jul-2021)
+
+- [Codegen] Hint names for generated files now end with `.g.cs` to follow the generally accepted conventions. By extension, this also fixes an issue which caused Coverlet to fail when instrumenting assemblies that used MiniRazor's compile-time generation.
+- [Codegen] Added `Microsoft.CodeAnalysis.CSharp` assembly file inside the package for better compatibility.
+- [Compiler] Fixed an issue where calling `Razor.Compile(...)` threw an exception when it failed to load a transitive assembly.
+- [Compiler] Changed `accessModifier` parameter in `Razor.Transpile(...)` to nullable and optional.
+- Added `netcoreapp3.0` and `netstandard2.1` targets to MiniRazor meta package to match the targets available for MiniRazor.Compiler.
+- Added readme file to the package.
+
 ### v2.1.2 (23-Mar-2021)
 
 - [CodeGen] Fixed an issue where MiniRazor.CodeGen was incorrectly installed as development dependency by default.
