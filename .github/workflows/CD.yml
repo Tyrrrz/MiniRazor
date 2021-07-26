@@ -27,3 +27,9 @@ jobs:
           dotnet nuget push MiniRazor.Compiler/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
           dotnet nuget push MiniRazor.CodeGen/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
           dotnet nuget push MiniRazor/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+
+      - name: Notify Discord
+        run: |
+          curl '${{ secrets.DISCORD_WEBHOOK }}' \
+            --data-raw '{"content":"[**MiniRazor** ver. ${{ github.ref }} released](https://github.com/Tyrrrz/MiniRazor/releases/latest)"}' \
+            -H 'content-type: application/json'
