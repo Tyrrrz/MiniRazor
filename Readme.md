@@ -31,7 +31,7 @@ Although the source generator assembly itself is only used during build, this pa
 
 ### Compiling templates at build time
 
-> Compiling at build time requires MiniRazor.CodeGen
+> ⚠️ Compiling at build time requires [MiniRazor.CodeGen](https://nuget.org/packages/MiniRazor.CodeGen).
 
 MiniRazor comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
 This workflow is suitable and highly recommended for scenarios where your templates are not expected to change.
@@ -106,7 +106,7 @@ Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the m
 
 ### Compiling templates at runtime
 
-> Compiling at runtime requires MiniRazor.Compiler
+> ⚠️ Compiling at runtime requires [MiniRazor.Compiler](https://nuget.org/packages/MiniRazor.Compiler).
 
 If the previous approach doesn't fit your usage scenario, you can also compile templates at runtime.
 To do that, call `Razor.Compile(...)` with the template's source code:
