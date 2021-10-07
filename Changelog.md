@@ -1,3 +1,7 @@
+### v2.2 (07-Oct-2021)
+
+- Added cancellation support to `RenderAsync(...)` method in both runtime and build-time compilation workflows. An instance of `CancellationToken` passed to `RenderAsync(...)` is exposed inside of the template via the `CancellationToken` property. You can use this token to cancel operations started within the template.
+
 ### v2.1.4 (19-Jul-2021)
 
 - [Codegen] Fixed an issue where generated files included a checksum directive that referenced a non-existing file.
