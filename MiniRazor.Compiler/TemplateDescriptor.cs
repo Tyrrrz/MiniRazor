@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using MiniRazor.Utils.Extensions;
 
@@ -25,7 +26,7 @@ namespace MiniRazor
         /// <summary>
         /// Renders the template using the specified writer.
         /// </summary>
-        public async Task RenderAsync(TextWriter output, object? model)
+        public async Task RenderAsync(TextWriter output, object? model, CancellationToken cancellationToken = default)
         {
             var template = CreateTemplateInstance();
 
@@ -35,16 +36,18 @@ namespace MiniRazor
                 ? model.ToExpando()
                 : model;
 
+            template.CancellationToken = cancellationToken;
+
             await template.ExecuteAsync();
         }
 
         /// <summary>
         /// Renders the template to a string.
         /// </summary>
-        public async Task<string> RenderAsync(object? model)
+        public async Task<string> RenderAsync(object? model, CancellationToken cancellationToken = default)
         {
             using var output = new StringWriter();
-            await RenderAsync(output, model);
+            await RenderAsync(output, model, cancellationToken);
 
             return output.ToString();
         }

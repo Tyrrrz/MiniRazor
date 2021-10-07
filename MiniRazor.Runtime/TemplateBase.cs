@@ -1,5 +1,6 @@
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MiniRazor
@@ -14,9 +15,7 @@ namespace MiniRazor
         /// <inheritdoc />
         public TextWriter? Output { get; set; }
 
-        /// <summary>
-        /// Template model.
-        /// </summary>
+        /// <inheritdoc cref="ITemplate.Model" />
         public TModel Model { get; set; } = default!;
 
         object? ITemplate.Model
@@ -24,6 +23,9 @@ namespace MiniRazor
             get => Model;
             set => Model = (TModel) value!;
         }
+
+        /// <inheritdoc />
+        public CancellationToken CancellationToken { get; set; }
 
         /// <summary>
         /// Wraps a string in a container that instructs the renderer to avoid encoding.

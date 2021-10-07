@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MiniRazor
@@ -9,14 +10,19 @@ namespace MiniRazor
     public interface ITemplate
     {
         /// <summary>
-        /// Template output.
+        /// Output associated with this template.
         /// </summary>
         TextWriter? Output { get; set; }
 
         /// <summary>
-        /// Template model.
+        /// Model associated with this template.
         /// </summary>
         object? Model { get; set; }
+
+        /// <summary>
+        /// Cancellation token associated with this template.
+        /// </summary>
+        CancellationToken CancellationToken { get; set; }
 
         /// <summary>
         /// Executes the template.

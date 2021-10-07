@@ -97,21 +97,22 @@ namespace MiniRazor.CodeGen
             // Extend the template with some additional code
             code = code.Insert(code.IndexOf("public async override", StringComparison.Ordinal), $@"
 /// <summary>Renders the template using the specified writer.</summary>
-public static async global::System.Threading.Tasks.Task RenderAsync(global::System.IO.TextWriter output, {modelTypeName} model)
+public static async global::System.Threading.Tasks.Task RenderAsync(global::System.IO.TextWriter output, {modelTypeName} model, global::System.Threading.CancellationToken cancellationToken = default)
 {{
     var template = new {className}();
     template.Output = output;
     template.Model = model;
+    template.CancellationToken = cancellationToken;
 
     await template.ExecuteAsync().ConfigureAwait(false);
 }}
 
 /// <summary>Renders the template to a string.</summary>
-public static async global::System.Threading.Tasks.Task<string> RenderAsync({modelTypeName} model)
+public static async global::System.Threading.Tasks.Task<string> RenderAsync({modelTypeName} model, global::System.Threading.CancellationToken cancellationToken = default)
 {{
     using (var output = new global::System.IO.StringWriter())
     {{
-        await RenderAsync(output, model).ConfigureAwait(false);
+        await RenderAsync(output, model, cancellationToken).ConfigureAwait(false);
         return output.ToString();
     }}
 }}

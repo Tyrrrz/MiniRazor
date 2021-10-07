@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MiniRazor.Compiler.Tests.Models;
@@ -44,6 +46,19 @@ namespace MiniRazor.Compiler.Tests
 
             // Assert
             result.Should().Be("7");
+        }
+
+        [Fact]
+        public async Task Template_can_call_asynchronous_methods_with_cancellation_on_a_model()
+        {
+            // Arrange
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+            var template = Razor.Compile("@{ await Model.WaitIndefinitelyAsync(CancellationToken); }");
+
+            // Act & assert
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+                await template.RenderAsync(new TestModelWithAsyncMethodWithCancellation(), cts.Token)
+            );
         }
 
         [Fact]
