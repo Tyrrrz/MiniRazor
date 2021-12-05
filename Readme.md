@@ -7,9 +7,9 @@
 [![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
-⚠️ **Project status: maintenance mode** (bug fixes only).
+⚠️ **Project status: maintenance mode**. [What does it mean?](https://github.com/Tyrrrz/shared/blob/master/docs/project-status.md)
 
-MiniRazor is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both at build time and at runtime.
+**MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both at build time and at runtime.
 
 💬 **If you want to chat, join my [Discord server](https://discord.gg/2SUWKFnHSm)**.
 
@@ -33,7 +33,7 @@ Although the source generator assembly itself is only used during build, this pa
 
 > ⚠️ Compiling at build time requires [MiniRazor.CodeGen](https://nuget.org/packages/MiniRazor.CodeGen).
 
-MiniRazor comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
+**MiniRazor** comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
 This workflow is suitable and highly recommended for scenarios where your templates are not expected to change.
 
 To do that, first create a Razor template as shown here:
@@ -63,7 +63,7 @@ Note the usage of two important directives at the top of the file:
 - `@namespace` directive instructs the compiler to put the generated class into the `MyNamespace.Templates` namespace.
   If this directive is omitted, the default namespace of `MiniRazor.GeneratedTemplates` will be used instead.
 
-In order to make the template accessible by MiniRazor's source generator, you need to add it to the project as `AdditionalFiles` and mark it with the `IsRazorTemplate="true"` attribute:
+In order to make the template accessible by **MiniRazor**'s source generator, you need to add it to the project as `AdditionalFiles` and mark it with the `IsRazorTemplate="true"` attribute:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -125,7 +125,7 @@ var output = await template.RenderAsync(new MyModel { Subject = "World" });
 Calling `Razor.Compile(...)` transforms the provided Razor template directly into IL code and hosts it in a generated in-memory assembly.
 This returns an instance of `TemplateDescriptor`, which can then be used to render output against a model.
 
-By default, MiniRazor uses the default assembly load context, which means that the compiled IL code will stay in memory forever.
+By default, **MiniRazor** uses the default assembly load context, which means that the compiled IL code will stay in memory forever.
 To avoid that, you can pass a custom instance of `AssemblyLoadContext` that lets you control the lifetime of generated assemblies:
 
 ```csharp
