@@ -1,8 +1,7 @@
-﻿namespace MiniRazor.CodeGen.Utils.Extensions
+﻿namespace MiniRazor.CodeGen.Utils.Extensions;
+
+internal static class StringExtensions
 {
-    internal static class StringExtensions
-    {
-        public static string? NullIfWhiteSpace(this string str) =>
-            !string.IsNullOrWhiteSpace(str) ? str : null;
-    }
+    public static string? NullIfWhiteSpace(this string str) =>
+        !string.IsNullOrWhiteSpace(str) ? str : null;
 }

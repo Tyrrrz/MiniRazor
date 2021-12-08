@@ -5,47 +5,46 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 
-namespace MiniRazor
+namespace MiniRazor;
+
+[ExcludeFromCodeCoverage]
+internal partial class EmptyRazorProjectFileSystem : RazorProjectFileSystem
+{
+    public static EmptyRazorProjectFileSystem Instance { get; } = new();
+
+    public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
+        Enumerable.Empty<RazorProjectItem>();
+
+    [Obsolete("Use GetItem(string path, string fileKind) instead.")]
+    public override RazorProjectItem GetItem(string path) =>
+        GetItem(path, null);
+
+    public override RazorProjectItem GetItem(string path, string? fileKind) =>
+        new NotFoundProjectItem(string.Empty, path, fileKind);
+}
+
+internal partial class EmptyRazorProjectFileSystem
 {
     [ExcludeFromCodeCoverage]
-    internal partial class EmptyRazorProjectFileSystem : RazorProjectFileSystem
+    private class NotFoundProjectItem : RazorProjectItem
     {
-        public static EmptyRazorProjectFileSystem Instance { get; } = new();
+        public override string BasePath { get; }
 
-        public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
-            Enumerable.Empty<RazorProjectItem>();
+        public override string FilePath { get; }
 
-        [Obsolete("Use GetItem(string path, string fileKind) instead.")]
-        public override RazorProjectItem GetItem(string path) =>
-            GetItem(path, null);
+        public override string FileKind { get; }
 
-        public override RazorProjectItem GetItem(string path, string? fileKind) =>
-            new NotFoundProjectItem(string.Empty, path, fileKind);
-    }
+        public override bool Exists => false;
 
-    internal partial class EmptyRazorProjectFileSystem
-    {
-        [ExcludeFromCodeCoverage]
-        private class NotFoundProjectItem : RazorProjectItem
+        public override string PhysicalPath => throw new NotSupportedException();
+
+        public NotFoundProjectItem(string basePath, string path, string? fileKind)
         {
-            public override string BasePath { get; }
-
-            public override string FilePath { get; }
-
-            public override string FileKind { get; }
-
-            public override bool Exists => false;
-
-            public override string PhysicalPath => throw new NotSupportedException();
-
-            public NotFoundProjectItem(string basePath, string path, string? fileKind)
-            {
-                BasePath = basePath;
-                FilePath = path;
-                FileKind = fileKind ?? FileKinds.GetFileKindFromFilePath(path);
-            }
-
-            public override Stream Read() => throw new NotSupportedException();
+            BasePath = basePath;
+            FilePath = path;
+            FileKind = fileKind ?? FileKinds.GetFileKindFromFilePath(path);
         }
+
+        public override Stream Read() => throw new NotSupportedException();
     }
 }

@@ -2,23 +2,22 @@
 using System.Runtime.Loader;
 using Microsoft.CodeAnalysis;
 
-namespace MiniRazor.Utils.Extensions
-{
-    internal static class AssemblyExtensions
-    {
-        public static MetadataReference ToMetadataReference(this Assembly assembly) =>
-            MetadataReference.CreateFromFile(assembly.Location);
+namespace MiniRazor.Utils.Extensions;
 
-        public static Assembly? TryLoadFromAssemblyName(this AssemblyLoadContext loadContext, AssemblyName name)
+internal static class AssemblyExtensions
+{
+    public static MetadataReference ToMetadataReference(this Assembly assembly) =>
+        MetadataReference.CreateFromFile(assembly.Location);
+
+    public static Assembly? TryLoadFromAssemblyName(this AssemblyLoadContext loadContext, AssemblyName name)
+    {
+        try
         {
-            try
-            {
-                return loadContext.LoadFromAssemblyName(name);
-            }
-            catch
-            {
-                return null;
-            }
+            return loadContext.LoadFromAssemblyName(name);
+        }
+        catch
+        {
+            return null;
         }
     }
 }
