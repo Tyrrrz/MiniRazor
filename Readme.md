@@ -1,6 +1,6 @@
 # MiniRazor
 
-[![Build](https://github.com/Tyrrrz/MiniRazor/workflows/CI/badge.svg?branch=master)](https://github.com/Tyrrrz/MiniRazor/actions)
+[![Build](https://github.com/Tyrrrz/MiniRazor/workflows/main/badge.svg?branch=master)](https://github.com/Tyrrrz/MiniRazor/actions)
 [![Coverage](https://codecov.io/gh/Tyrrrz/MiniRazor/branch/master/graph/badge.svg)](https://codecov.io/gh/Tyrrrz/MiniRazor)
 [![Version](https://img.shields.io/nuget/v/MiniRazor.svg)](https://nuget.org/packages/MiniRazor)
 [![Downloads](https://img.shields.io/nuget/dt/MiniRazor.svg)](https://nuget.org/packages/MiniRazor)
