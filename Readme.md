@@ -7,7 +7,7 @@
 [![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
-⚠️ **Project status: maintenance mode**. [What does it mean?](https://github.com/Tyrrrz/shared/blob/master/docs/project-status.md)
+⚠️ **Project status: maintenance mode**. [What does it mean?](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)
 
 **MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both at build time and at runtime.
 
@@ -18,14 +18,14 @@
 All-in-one meta package:
 
 - 📦 [NuGet](https://nuget.org/packages/MiniRazor): `dotnet add package MiniRazor`
-  
+
 Specialized packages:
 
 - 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (**runtime compilation** only)
 - 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.CodeGen` (**build time compilation** only)
 
 > ⚠ If you're referencing MiniRazor.CodeGen, ensure that it's **NOT** marked with `PrivateAssets="all"`!
-Although the source generator assembly itself is only used during build, this package also contains binaries which are required by the generated code at runtime. 
+> Although the source generator assembly itself is only used during build, this package also contains binaries which are required by the generated code at runtime.
 
 ## Usage
 
@@ -59,7 +59,6 @@ Note the usage of two important directives at the top of the file:
 
 - `@inherits` directive indicates that the base type of this template is `MiniRazor.TemplateBase<TModel>`, with the model of type `string`.
   If this directive is not included, the template will instead inherit from `MiniRazor.TemplateBase<dynamic>` by default, which doesn't offer the same level of type-safety when working with the model.
-  
 - `@namespace` directive instructs the compiler to put the generated class into the `MyNamespace.Templates` namespace.
   If this directive is omitted, the default namespace of `MiniRazor.GeneratedTemplates` will be used instead.
 
@@ -151,6 +150,6 @@ If you want to print raw HTML content, for example if it's sourced from somewher
     string GetHtml() => "<p>Hello world!</p>";
 }
 
-@GetHtml() // &lt;p&gt;Hello world!&lt;/p&gt; 
+@GetHtml() // &lt;p&gt;Hello world!&lt;/p&gt;
 @Raw(GetHtml()) // <p>Hello world!</p>
 ```
