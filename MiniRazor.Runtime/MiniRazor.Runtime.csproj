@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>MiniRazor</RootNamespace>
+    <IsPackable>true</IsPackable>
     <Description>Contains runtime dependencies for MiniRazor.Compiler and MiniRazor.CodeGen</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>annotations</Nullable>

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
     <Description>Contains Roslyn source generator that transpiles Razor templates into C# classes</Description>
     <Nullable>annotations</Nullable>
 

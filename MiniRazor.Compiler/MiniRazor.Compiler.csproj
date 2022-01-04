@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;netstandard2.1;netstandard2.0</TargetFrameworks>
     <RootNamespace>MiniRazor</RootNamespace>
+    <IsPackable>true</IsPackable>
     <Description>Contains methods to transpile and compile Razor templates</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
