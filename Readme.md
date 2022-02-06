@@ -9,7 +9,7 @@
 
 ⚠️ **Project status: maintenance mode**. [What does it mean?](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)
 
-**MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both at build time and at runtime.
+**MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both during build and at run-time.
 
 💬 **If you want to chat, join my [Discord server](https://discord.gg/2SUWKFnHSm)**.
 
@@ -21,15 +21,15 @@ All-in-one meta package:
 
 Specialized packages:
 
-- 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (**runtime compilation** only)
-- 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.CodeGen` (**build time compilation** only)
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor.Compiler): `dotnet add package MiniRazor.Compiler` (**run-time compilation** only)
+- 📦 [NuGet](https://nuget.org/packages/MiniRazor.CodeGen): `dotnet add package MiniRazor.CodeGen` (**build-time compilation** only)
 
 > ⚠ If you're referencing MiniRazor.CodeGen, ensure that it's **NOT** marked with `PrivateAssets="all"`!
-> Although the source generator assembly itself is only used during build, this package also contains binaries which are required by the generated code at runtime.
+> Although the source generator assembly itself is only used during build, this package also contains binaries which are required by the generated code at run-time.
 
 ## Usage
 
-### Compiling templates at build time
+### Compiling templates at build-time
 
 > ⚠️ Compiling at build time requires [MiniRazor.CodeGen](https://nuget.org/packages/MiniRazor.CodeGen).
 
@@ -103,11 +103,11 @@ await TemplateFoo.RenderAsync(Console.Out, "world");
 Note that the type of the `model` parameter in `RenderAsync(...)` is automatically inferred from the `@inherits` directive specified in the template.
 Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the method expects a parameter of type `string`.
 
-### Compiling templates at runtime
+### Compiling templates at run-time
 
-> ⚠️ Compiling at runtime requires [MiniRazor.Compiler](https://nuget.org/packages/MiniRazor.Compiler).
+> ⚠️ Compiling at run-time requires [MiniRazor.Compiler](https://nuget.org/packages/MiniRazor.Compiler).
 
-If the previous approach doesn't fit your usage scenario, you can also compile templates at runtime.
+If the previous approach doesn't fit your usage scenario, you can also compile templates at run-time.
 To do that, call `Razor.Compile(...)` with the template's source code:
 
 ```csharp
