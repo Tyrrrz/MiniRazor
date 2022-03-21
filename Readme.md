@@ -1,12 +1,13 @@
 # MiniRazor
 
-[![Build](https://github.com/Tyrrrz/MiniRazor/workflows/main/badge.svg?branch=master)](https://github.com/Tyrrrz/MiniRazor/actions)
-[![Coverage](https://codecov.io/gh/Tyrrrz/MiniRazor/branch/master/graph/badge.svg)](https://codecov.io/gh/Tyrrrz/MiniRazor)
+[![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://vshymanskyy.github.io/StandWithUkraine)
+[![Build](https://img.shields.io/github/workflow/status/Tyrrrz/MiniRazor/CI/master)](https://github.com/Tyrrrz/MiniRazor/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/Tyrrrz/MiniRazor/master)](https://codecov.io/gh/Tyrrrz/MiniRazor)
 [![Version](https://img.shields.io/nuget/v/MiniRazor.svg)](https://nuget.org/packages/MiniRazor)
 [![Downloads](https://img.shields.io/nuget/dt/MiniRazor.svg)](https://nuget.org/packages/MiniRazor)
 [![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
-[![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
-[![Fuck Russia](https://img.shields.io/badge/fuck-russia-black.svg)](https://twitter.com/Tyrrrz/status/1495972128977571848)
+[![Donate](https://img.shields.io/badge/donate-$$$-8a2be2.svg)](https://tyrrrz.me/donate)
+[![Fuck Russia](https://img.shields.io/badge/fuck-russia-e4181c.svg?labelColor=000000)](https://twitter.com/tyrrrz/status/1495972128977571848)
 
 ⚠️ **Project status: maintenance mode**<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)</sup>
 
@@ -23,7 +24,7 @@ By using this project or its source code, for any purpose and in any shape or fo
 
 To learn more about the war and how you can help, [click here](https://tyrrrz.me). Glory to Ukraine! 🇺🇦
 
-## Download
+## Install
 
 All-in-one meta package:
 
