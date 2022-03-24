@@ -42,7 +42,7 @@ Specialized packages:
 
 ### Compiling templates at build-time
 
-> ⚠️ Compiling at build time requires [MiniRazor.CodeGen](https://nuget.org/packages/MiniRazor.CodeGen).
+> ⚠️ Compiling at build time requires [MiniRazor](#install) or [MiniRazor.CodeGen](#install).
 
 **MiniRazor** comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
 This workflow is suitable and highly recommended for scenarios where your templates are not expected to change.
@@ -116,7 +116,7 @@ Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the m
 
 ### Compiling templates at run-time
 
-> ⚠️ Compiling at run-time requires [MiniRazor.Compiler](https://nuget.org/packages/MiniRazor.Compiler).
+> ⚠️ Compiling at run-time requires [MiniRazor](#install) or [MiniRazor.Compiler](#install).
 
 If the previous approach doesn't fit your usage scenario, you can also compile templates at run-time.
 To do that, call `Razor.Compile(...)` with the template's source code:
@@ -132,7 +132,7 @@ var output = await template.RenderAsync(new MyModel { Subject = "World" });
 // <p>Hello, World!</p>
 ```
 
-Calling `Razor.Compile(...)` transforms the provided Razor template directly into IL code and hosts it in a generated in-memory assembly.
+Calling `Razor.Compile(...)` transforms the provided Razor template directly into IL code and hosts it in a dynamic in-memory assembly.
 This returns an instance of `TemplateDescriptor`, which can then be used to render output against a model.
 
 By default, **MiniRazor** uses the default assembly load context, which means that the compiled IL code will stay in memory forever.
