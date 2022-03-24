@@ -116,24 +116,26 @@ public static class Razor
                 yield return assemblyLoadContext
                     .TryLoadFromAssemblyName(parentAssembly.GetName())?
                     .ToMetadataReference();
+
+                // References from parent assembly
+                var transitiveDependencies = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
+                PopulateTransitiveDependencies(parentAssembly, transitiveDependencies);
+
+                foreach (var dependency in transitiveDependencies)
+                {
+                    yield return assemblyLoadContext
+                        .TryLoadFromAssemblyName(dependency)?
+                        .ToMetadataReference();
+                }
             }
             
 #if NETCOREAPP3_0_OR_GREATER
-            foreach (var assembly in assemblyLoadContext.Assemblies.Where(x => !x.IsDynamic && !string.IsNullOrEmpty(x.Location)))
+            if (parentAssembly.IsDynamic)
             {
-                yield return assembly.ToMetadataReference();
-            }
-#else
-
-            // References from parent assembly
-            var transitiveDependencies = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
-            PopulateTransitiveDependencies(parentAssembly, transitiveDependencies);
-
-            foreach (var dependency in transitiveDependencies)
-            {
-                yield return assemblyLoadContext
-                    .TryLoadFromAssemblyName(dependency)?
-                    .ToMetadataReference();
+                foreach (var assembly in assemblyLoadContext.Assemblies.Where(x => !x.IsDynamic && !string.IsNullOrEmpty(x.Location)))
+                {
+                    yield return assembly.ToMetadataReference();
+                }
             }
 #endif
         }
