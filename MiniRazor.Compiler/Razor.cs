@@ -119,7 +119,7 @@ public static class Razor
             }
             
 #if NETCOREAPP3_0_OR_GREATER
-            foreach (var assembly in assemblyLoadContext.Assemblies.Where(x => !x.IsDynamic))
+            foreach (var assembly in assemblyLoadContext.Assemblies.Where(x => !x.IsDynamic && !string.IsNullOrEmpty(x.Location)))
             {
                 yield return assembly.ToMetadataReference();
             }
