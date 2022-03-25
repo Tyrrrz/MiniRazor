@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
@@ -74,7 +73,7 @@ public class CompilationSpecs
     }
     
     [Fact]
-    public void Template_can_be_compiled_from_a_dynamic_assembly()
+    public void Template_can_be_compiled_with_dynamically_loaded_assembly()
     {
         var pathToMiniRazorAssembly = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "MiniRazor.Compiler.dll");
         
