@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Management.Automation;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
@@ -75,17 +76,29 @@ public class CompilationSpecs
     [Fact]
     public void Template_can_be_compiled_from_a_dynamic_assembly()
     {
+        var pathToMiniRazorAssembly = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "MiniRazor.Compiler.dll");
+        
         //language=C#
-        var sourceCode = @"using MiniRazor;
+        var sourceCode = $@"using System;
+using System.Runtime.Loader;
+using System.Reflection;
 
 public class Program
-{
+{{
     public static int Main()
-    {
-        Razor.Compile(""Hello world!"");
+    {{
+        var useAssemblyLoadContextToInferReferences = true;
+        
+        var miniRazorAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(""{pathToMiniRazorAssembly}"");
+        var compilationOptionsType = miniRazorAssembly.GetType(""MiniRazor.RazorCompileOptions"", true);
+        object optionsInstance = Activator.CreateInstance(compilationOptionsType);
+        PropertyInfo inferOptionProperty = compilationOptionsType.GetProperty(""InferReferencesFromAssemblyLoadContext"");
+        inferOptionProperty.SetValue(optionsInstance, useAssemblyLoadContextToInferReferences, null);
+
+        var template = miniRazorAssembly.GetType(""MiniRazor.Razor"").GetMethod(""Compile"", new [] {{typeof(string), compilationOptionsType}}).Invoke(null, new object[] {{ ""Hello world!"", optionsInstance}});
         return 0;
-    }
-}
+    }}
+}}
 ";
         
         var ast = SyntaxFactory.ParseSyntaxTree(
@@ -97,9 +110,9 @@ public class Program
         var compilation = CSharpCompilation.Create(
             "MiniRazorCompilerTests_DynamicAssembly_" + Guid.NewGuid(),
             new[] {ast},
-            ReferenceAssemblies.Net60
-                .Append(MetadataReference.CreateFromFile(typeof(Razor).Assembly.Location))
-        );
+            ReferenceAssemblies.Net60);
+                //.Append(MetadataReference.CreateFromFile(typeof(Razor).Assembly.Location))
+        
 
         var compilationErrors = compilation
             .GetDiagnostics()
