@@ -92,7 +92,7 @@ public class Program
 {{
     public static int Main()
     {{
-        var miniRazorAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(""{miniRazorAssemblyPath}"");
+        var miniRazorAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(@""{miniRazorAssemblyPath}"");
         var references = AssemblyLoadContext.Default.Assemblies
             .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
             .Select(a => MetadataReference.CreateFromFile(a.Location))
