@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -83,7 +82,7 @@ public static class Razor
     }
 
     private static IReadOnlyList<MetadataReference> GetReferences(AssemblyLoadContext assemblyLoadContext,
-        Assembly parentAssembly, RazorCompileOptions? razorCompileOptions = null)
+        Assembly parentAssembly, IReadOnlyList<MetadataReference>? references = null)
     {
         void PopulateTransitiveDependencies(Assembly assembly, ISet<AssemblyName> assemblyNames)
         {
@@ -111,18 +110,6 @@ public static class Razor
                 .TryLoadFromAssemblyName(typeof(TemplateBase<>).Assembly.GetName())?
                 .ToMetadataReference();
 
-            if (razorCompileOptions?.InferReferencesFromAssemblyLoadContext == true)
-            {
-#if NETCOREAPP3_0_OR_GREATER
-                foreach (var assembly in assemblyLoadContext.Assemblies
-                             .Where(x => !x.IsDynamic && !string.IsNullOrEmpty(x.Location)))
-                {
-                    yield return assembly.ToMetadataReference();
-                }
-#endif                
-                yield break;
-            }
-            
             yield return assemblyLoadContext
                 .TryLoadFromAssemblyName(parentAssembly.GetName())?
                 .ToMetadataReference();
@@ -139,7 +126,7 @@ public static class Razor
             }
         }
 
-        return EnumerateReferences().WhereNotNull().Distinct().ToArray();
+        return references ?? EnumerateReferences().WhereNotNull().Distinct().ToArray();
     }
 
     private static TemplateDescriptor Compile(
@@ -226,10 +213,10 @@ public static class Razor
     /// <remarks>
     /// Compiled resources are stored in memory and can only be released by unloading the context.
     /// </remarks>
-    public static TemplateDescriptor Compile(string source, AssemblyLoadContext assemblyLoadContext, RazorCompileOptions options) =>
+    public static TemplateDescriptor Compile(string source, AssemblyLoadContext assemblyLoadContext, IReadOnlyList<MetadataReference> references) =>
         Compile(
             source,
-            GetReferences(assemblyLoadContext, Assembly.GetCallingAssembly(), options),
+            GetReferences(assemblyLoadContext, Assembly.GetCallingAssembly(), references),
             assemblyLoadContext
         );
 
@@ -240,10 +227,10 @@ public static class Razor
     /// Compiled resources are stored in memory and cannot be released.
     /// Use the overload that takes <see cref="AssemblyLoadContext"/> to specify a custom assembly context that can be unloaded.
     /// </remarks>
-    public static TemplateDescriptor Compile(string source, RazorCompileOptions options) =>
+    public static TemplateDescriptor Compile(string source, IReadOnlyList<MetadataReference> references) =>
         Compile(
             source,
-            GetReferences(AssemblyLoadContext.Default, Assembly.GetCallingAssembly(), options),
+            GetReferences(AssemblyLoadContext.Default, Assembly.GetCallingAssembly(), references),
             AssemblyLoadContext.Default
         );
 }

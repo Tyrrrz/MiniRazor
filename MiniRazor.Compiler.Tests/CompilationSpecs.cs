@@ -75,10 +75,16 @@ public class CompilationSpecs
     [Fact]
     public void Template_can_be_compiled_with_dynamically_loaded_assembly()
     {
-        var pathToMiniRazorAssembly = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "MiniRazor.Compiler.dll");
+        var miniRazorAssemblyPath = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(a => a.GetName().Name == "MiniRazor.Compiler")?.Location;
+        var codeAnalysisAssemblyPath = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(a => a.GetName().Name == "Microsoft.CodeAnalysis")?.Location;
+        miniRazorAssemblyPath.Should().NotBeNull();
+        codeAnalysisAssemblyPath.Should().NotBeNull();
         
         //language=C#
         var sourceCode = $@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.CodeAnalysis;
 using System.Runtime.Loader;
 using System.Reflection;
 
@@ -86,15 +92,13 @@ public class Program
 {{
     public static int Main()
     {{
-        var useAssemblyLoadContextToInferReferences = true;
-        
-        var miniRazorAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(""{pathToMiniRazorAssembly}"");
-        var compilationOptionsType = miniRazorAssembly.GetType(""MiniRazor.RazorCompileOptions"", true);
-        object optionsInstance = Activator.CreateInstance(compilationOptionsType);
-        PropertyInfo inferOptionProperty = compilationOptionsType.GetProperty(""InferReferencesFromAssemblyLoadContext"");
-        inferOptionProperty.SetValue(optionsInstance, useAssemblyLoadContextToInferReferences, null);
+        var miniRazorAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(""{miniRazorAssemblyPath}"");
+        var references = AssemblyLoadContext.Default.Assemblies
+            .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
+            .Select(a => MetadataReference.CreateFromFile(a.Location))
+            .ToList().AsReadOnly();
 
-        var template = miniRazorAssembly.GetType(""MiniRazor.Razor"").GetMethod(""Compile"", new [] {{typeof(string), compilationOptionsType}}).Invoke(null, new object[] {{ ""Hello world!"", optionsInstance}});
+        var template = miniRazorAssembly.GetType(""MiniRazor.Razor"").GetMethod(""Compile"", new [] {{typeof(string), typeof(IReadOnlyList<MetadataReference>)}}).Invoke(null, new object[] {{ ""Hello world!"", references}});
         return 0;
     }}
 }}
@@ -108,8 +112,8 @@ public class Program
         // Compile the code to IL
         var compilation = CSharpCompilation.Create(
             "MiniRazorCompilerTests_DynamicAssembly_" + Guid.NewGuid(),
-            new[] {ast},
-            ReferenceAssemblies.Net60);
+            new[] { ast },
+            ReferenceAssemblies.Net60.Union(new[] { MetadataReference.CreateFromFile(codeAnalysisAssemblyPath!) }));
 
         var compilationErrors = compilation
             .GetDiagnostics()
