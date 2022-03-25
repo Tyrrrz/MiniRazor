@@ -110,8 +110,6 @@ public class Program
             "MiniRazorCompilerTests_DynamicAssembly_" + Guid.NewGuid(),
             new[] {ast},
             ReferenceAssemblies.Net60);
-                //.Append(MetadataReference.CreateFromFile(typeof(Razor).Assembly.Location))
-        
 
         var compilationErrors = compilation
             .GetDiagnostics()
