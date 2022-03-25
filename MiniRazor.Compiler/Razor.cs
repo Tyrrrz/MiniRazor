@@ -114,18 +114,16 @@ public static class Razor
             yield return assemblyLoadContext
                 .TryLoadFromAssemblyName(parentAssembly.GetName())?
                 .ToMetadataReference();
-            
-            {
-                // References from parent assembly
-                var transitiveDependencies = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
-                PopulateTransitiveDependencies(parentAssembly, transitiveDependencies);
 
-                foreach (var dependency in transitiveDependencies)
-                {
-                    yield return assemblyLoadContext
-                        .TryLoadFromAssemblyName(dependency)?
-                        .ToMetadataReference();
-                }
+            // References from parent assembly
+            var transitiveDependencies = new HashSet<AssemblyName>(AssemblyNameEqualityComparer.Instance);
+            PopulateTransitiveDependencies(parentAssembly, transitiveDependencies);
+
+            foreach (var dependency in transitiveDependencies)
+            {
+                yield return assemblyLoadContext
+                    .TryLoadFromAssemblyName(dependency)?
+                    .ToMetadataReference();
             }
         }
 
