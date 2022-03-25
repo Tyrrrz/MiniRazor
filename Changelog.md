@@ -1,3 +1,7 @@
+### v2.2.1 (25-Mar-2022)
+
+- [Compiler] Added an overload to `Razor.Compile(...)` that allows specifying a list of assembly references to load. When using this overload, automatic assembly resolution present in other overloads will be disabled. (Thanks to [@Stuart Lang](https://github.com/slang25))
+
 ### v2.2 (07-Oct-2021)
 
 - Added cancellation support to `RenderAsync(...)` method in both runtime and build-time compilation workflows. An instance of `CancellationToken` passed to `RenderAsync(...)` is exposed inside of the template via the `CancellationToken` property. You can use this token to cancel operations started within the template.
