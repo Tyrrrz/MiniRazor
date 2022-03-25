@@ -47,6 +47,83 @@ public class CompilationSpecs
     }
 
     [Fact]
+    public void Template_can_be_compiled_with_dynamically_loaded_assembly()
+    {
+        // Arrange
+        // language=cs
+        var sourceCode = $@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Threading.Tasks;
+using MiniRazor;
+
+public class Program
+{{
+    public static async Task<int> Main()
+    {{
+        var template = Razor.Compile(""Hello world!"");
+        var result = await template.RenderAsync(null);
+        return result.Length;
+    }}
+}}
+";
+
+        var ast = SyntaxFactory.ParseSyntaxTree(
+            SourceText.From(sourceCode),
+            CSharpParseOptions.Default
+        );
+
+        var compilation = CSharpCompilation.Create(
+            $"TestAssembly_{Guid.NewGuid()}",
+            new[] { ast },
+            ReferenceAssemblies.Net60
+                .Append(MetadataReference.CreateFromFile(typeof(Razor).Assembly.Location))
+        );
+
+        var compilationErrors = compilation
+            .GetDiagnostics()
+            .Where(d => d.Severity >= DiagnosticSeverity.Error)
+            .ToArray();
+
+        if (compilationErrors.Any())
+        {
+            throw new InvalidOperationException(
+                "Failed to compile code." +
+                Environment.NewLine +
+                string.Join(Environment.NewLine, compilationErrors.Select(e => e.ToString()))
+            );
+        }
+
+        using var buffer = new MemoryStream();
+        var emit = compilation.Emit(buffer);
+
+        var emitErrors = emit
+            .Diagnostics
+            .Where(d => d.Severity >= DiagnosticSeverity.Error)
+            .ToArray();
+
+        if (emitErrors.Any())
+        {
+            throw new InvalidOperationException(
+                "Failed to emit code." +
+                Environment.NewLine +
+                string.Join(Environment.NewLine, emitErrors.Select(e => e.ToString()))
+            );
+        }
+
+        var generatedAssembly = Assembly.Load(buffer.ToArray());
+
+        // Act
+        var result = generatedAssembly.EntryPoint!.Invoke(null, null);
+
+        // Assert
+        result.Should().Be(12);
+    }
+
+    [Fact]
     public async Task Multiple_templates_can_be_compiled_independently()
     {
         // Act
@@ -70,89 +147,5 @@ public class CompilationSpecs
         );
 
         _testOutput.WriteLine(ex.Message);
-    }
-    
-    [Fact]
-    public void Template_can_be_compiled_with_dynamically_loaded_assembly()
-    {
-        var miniRazorAssemblyPath = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(a => a.GetName().Name == "MiniRazor.Compiler")?.Location;
-        var codeAnalysisAssemblyPath = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(a => a.GetName().Name == "Microsoft.CodeAnalysis")?.Location;
-        miniRazorAssemblyPath.Should().NotBeNull();
-        codeAnalysisAssemblyPath.Should().NotBeNull();
-        
-        //language=C#
-        var sourceCode = $@"using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using System.Runtime.Loader;
-using System.Reflection;
-
-public class Program
-{{
-    public static int Main()
-    {{
-        var miniRazorAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(@""{miniRazorAssemblyPath}"");
-        var references = AssemblyLoadContext.Default.Assemblies
-            .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
-            .Select(a => MetadataReference.CreateFromFile(a.Location))
-            .ToList().AsReadOnly();
-
-        var template = miniRazorAssembly.GetType(""MiniRazor.Razor"").GetMethod(""Compile"", new [] {{typeof(string), typeof(IReadOnlyList<MetadataReference>)}}).Invoke(null, new object[] {{ ""Hello world!"", references}});
-        return 0;
-    }}
-}}
-";
-        
-        var ast = SyntaxFactory.ParseSyntaxTree(
-            SourceText.From(sourceCode),
-            CSharpParseOptions.Default
-        );
-        
-        // Compile the code to IL
-        var compilation = CSharpCompilation.Create(
-            "MiniRazorCompilerTests_DynamicAssembly_" + Guid.NewGuid(),
-            new[] { ast },
-            ReferenceAssemblies.Net60.Union(new[] { MetadataReference.CreateFromFile(codeAnalysisAssemblyPath!) }));
-
-        var compilationErrors = compilation
-            .GetDiagnostics()
-            .Where(d => d.Severity >= DiagnosticSeverity.Error)
-            .ToArray();
-
-        if (compilationErrors.Any())
-        {
-            throw new InvalidOperationException(
-                "Failed to compile code." +
-                Environment.NewLine +
-                string.Join(Environment.NewLine, compilationErrors.Select(e => e.ToString()))
-            );
-        }
-
-        // Emit the code to an in-memory buffer
-        using var buffer = new MemoryStream();
-        var emit = compilation.Emit(buffer);
-        
-        var emitErrors = emit
-            .Diagnostics
-            .Where(d => d.Severity >= DiagnosticSeverity.Error)
-            .ToArray();
-
-        if (emitErrors.Any())
-        {
-            throw new InvalidOperationException(
-                "Failed to emit code." +
-                Environment.NewLine +
-                string.Join(Environment.NewLine, emitErrors.Select(e => e.ToString()))
-            );
-        }
-        
-        // Load the generated assembly
-        var generatedAssembly = Assembly.Load(buffer.ToArray());
-        
-        // Execute the entry point method
-        var result = (int) generatedAssembly.EntryPoint!.Invoke(null, null)!;
-        
-        Assert.Equal(0, result);
     }
 }

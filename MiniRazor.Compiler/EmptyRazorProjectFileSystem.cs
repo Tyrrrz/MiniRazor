@@ -15,7 +15,6 @@ internal partial class EmptyRazorProjectFileSystem : RazorProjectFileSystem
     public override IEnumerable<RazorProjectItem> EnumerateItems(string basePath) =>
         Enumerable.Empty<RazorProjectItem>();
 
-    [Obsolete("Use GetItem(string path, string fileKind) instead.")]
     public override RazorProjectItem GetItem(string path) =>
         GetItem(path, null);
 

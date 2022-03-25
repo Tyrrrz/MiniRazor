@@ -54,7 +54,7 @@ public static class Razor
                 {
                     node.Modifiers.Clear();
 
-                    // Null access modifier resolved to internal by default in C#
+                    // Absence of access modifiers defaults to internal in C#
                     if (!string.IsNullOrWhiteSpace(accessModifier))
                         node.Modifiers.Add(accessModifier);
 
@@ -81,8 +81,9 @@ public static class Razor
         return codeDocument.GetCSharpDocument().GeneratedCode;
     }
 
-    private static IReadOnlyList<MetadataReference> GetReferences(AssemblyLoadContext assemblyLoadContext,
-        Assembly parentAssembly, IReadOnlyList<MetadataReference>? references = null)
+    private static IReadOnlyList<MetadataReference> LoadReferences(
+        AssemblyLoadContext assemblyLoadContext,
+        Assembly parentAssembly)
     {
         void PopulateTransitiveDependencies(Assembly assembly, ISet<AssemblyName> assemblyNames)
         {
@@ -126,20 +127,26 @@ public static class Razor
             }
         }
 
-        return references ?? EnumerateReferences().WhereNotNull().Distinct().ToArray();
+        return EnumerateReferences().WhereNotNull().Distinct().ToArray();
     }
 
-    private static TemplateDescriptor Compile(
+    /// <summary>
+    /// Compiles a Razor template into executable code.
+    /// </summary>
+    /// <remarks>
+    /// Generated code is stored in a private memory space and can be released by unloading the specified <see cref="AssemblyLoadContext" />.
+    /// </remarks>
+    public static TemplateDescriptor Compile(
         string source,
-        IReadOnlyList<MetadataReference> references,
-        AssemblyLoadContext assemblyLoadContext)
+        AssemblyLoadContext assemblyLoadContext,
+        IReadOnlyList<MetadataReference> references)
     {
         var csharpCode = Transpile(source);
         var csharpDocumentAst = CSharpSyntaxTree.ParseText(csharpCode);
 
         var csharpDocumentCompilation = CSharpCompilation.Create(
             $"MiniRazor_Assembly_{Guid.NewGuid()}",
-            new[] {csharpDocumentAst},
+            new[] { csharpDocumentAst },
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
         );
@@ -180,57 +187,38 @@ public static class Razor
 
     /// <summary>
     /// Compiles a Razor template into executable code.
-    /// Specified <see cref="AssemblyLoadContext"/> is used for assembly isolation.
     /// </summary>
     /// <remarks>
-    /// Compiled resources are stored in memory and can only be released by unloading the context.
+    /// <para>
+    /// Transitive dependencies are resolved automatically based on references derived from the calling assembly.
+    /// </para>
+    /// <para>
+    /// Generated code is stored in a private memory space and can be released by unloading the specified <see cref="AssemblyLoadContext" />.
+    /// </para>
     /// </remarks>
     public static TemplateDescriptor Compile(string source, AssemblyLoadContext assemblyLoadContext) =>
         Compile(
             source,
-            GetReferences(assemblyLoadContext, Assembly.GetCallingAssembly()),
-            assemblyLoadContext
+            assemblyLoadContext,
+            LoadReferences(assemblyLoadContext, Assembly.GetCallingAssembly())
         );
 
     /// <summary>
     /// Compiles a Razor template into executable code.
     /// </summary>
     /// <remarks>
-    /// Compiled resources are stored in memory and cannot be released.
+    /// <para>
+    /// Transitive dependencies are resolved automatically based on references derived from the calling assembly.
+    /// </para>
+    /// <para>
+    /// Generated code is stored in a shared memory space and cannot be released.
     /// Use the overload that takes <see cref="AssemblyLoadContext"/> to specify a custom assembly context that can be unloaded.
+    /// </para>
     /// </remarks>
     public static TemplateDescriptor Compile(string source) =>
         Compile(
             source,
-            GetReferences(AssemblyLoadContext.Default, Assembly.GetCallingAssembly()),
-            AssemblyLoadContext.Default
-        );
-
-    /// <summary>
-    /// Compiles a Razor template into executable code.
-    /// Specified <see cref="AssemblyLoadContext"/> is used for assembly isolation.
-    /// </summary>
-    /// <remarks>
-    /// Compiled resources are stored in memory and can only be released by unloading the context.
-    /// </remarks>
-    public static TemplateDescriptor Compile(string source, AssemblyLoadContext assemblyLoadContext, IReadOnlyList<MetadataReference> references) =>
-        Compile(
-            source,
-            GetReferences(assemblyLoadContext, Assembly.GetCallingAssembly(), references),
-            assemblyLoadContext
-        );
-
-    /// <summary>
-    /// Compiles a Razor template into executable code.
-    /// </summary>
-    /// <remarks>
-    /// Compiled resources are stored in memory and cannot be released.
-    /// Use the overload that takes <see cref="AssemblyLoadContext"/> to specify a custom assembly context that can be unloaded.
-    /// </remarks>
-    public static TemplateDescriptor Compile(string source, IReadOnlyList<MetadataReference> references) =>
-        Compile(
-            source,
-            GetReferences(AssemblyLoadContext.Default, Assembly.GetCallingAssembly(), references),
-            AssemblyLoadContext.Default
+            AssemblyLoadContext.Default,
+            LoadReferences(AssemblyLoadContext.Default, Assembly.GetCallingAssembly())
         );
 }
