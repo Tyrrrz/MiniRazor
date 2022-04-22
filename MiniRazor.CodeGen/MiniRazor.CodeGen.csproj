@@ -18,7 +18,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <!-- Keep this dependency as low as possible since we can't bundle it -->
+    <!-- https://github.com/Tyrrrz/CliFx/issues/127 -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" />
   </ItemGroup>
@@ -31,11 +33,9 @@
     <ProjectReference Include="..\MiniRazor.Compiler\MiniRazor.Compiler.csproj" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Source generators can't have public dependencies, so we have to embed them inside the package -->
+  <!-- Source generators can't have public dependencies, so we have to bundle them inside the package -->
   <ItemGroup>
     <None Include="$(OutputPath)/Microsoft.AspNetCore.Razor.Language.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(OutputPath)/Microsoft.CodeAnalysis.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(OutputPath)/Microsoft.CodeAnalysis.CSharp.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)/MiniRazor.CodeGen.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)/MiniRazor.Compiler.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)/MiniRazor.Runtime.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
@@ -60,7 +60,6 @@
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="../MiniRazor.Compiler/bin/$(Configuration)/$(TargetFramework)/MiniRazor.Compiler.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Razor_Language)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_CodeAnalysis_CSharp)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 
