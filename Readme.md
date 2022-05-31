@@ -13,7 +13,7 @@
 
 **MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both during build and at run-time.
 
-## Terms of use
+## Terms of use<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/why-so-political.md)</sup>
 
 By using this project or its source code, for any purpose and in any shape or form, you grant your **implicit agreement** to all the following statements:
 
@@ -42,7 +42,8 @@ Specialized packages:
 
 ### Compiling templates at build-time
 
-> ⚠️ Compiling at build time requires [MiniRazor](#install) or [MiniRazor.CodeGen](#install).
+> **Warning**:
+> Compiling at build time requires [MiniRazor](#install) or [MiniRazor.CodeGen](#install).
 
 **MiniRazor** comes with a source generator that can parse Razor templates and transpile them into C# classes directly at build time.
 This workflow is suitable and highly recommended for scenarios where your templates are not expected to change.
@@ -116,7 +117,8 @@ Here, since the template is derived from `MiniRazor.TemplateBase<string>`, the m
 
 ### Compiling templates at run-time
 
-> ⚠️ Compiling at run-time requires [MiniRazor](#install) or [MiniRazor.Compiler](#install).
+> **Warning**:
+> Compiling at run-time requires [MiniRazor](#install) or [MiniRazor.Compiler](#install).
 
 If the previous approach doesn't fit your usage scenario, you can also compile templates at run-time.
 To do that, call `Razor.Compile(...)` with the template's source code:
