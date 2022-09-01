@@ -138,7 +138,7 @@ Calling `Razor.Compile(...)` transforms the provided Razor template directly int
 This returns an instance of `TemplateDescriptor`, which can then be used to render output against a model.
 
 By default, **MiniRazor** uses the default assembly load context, which means that the compiled IL code will stay in memory forever.
-To avoid that, you can pass a custom instance of `AssemblyLoadContext` that lets you control the lifetime of generated assemblies:
+To avoid that, you can pass a custom instance of `AssemblyLoadContext` that lets you control the lifetime of the generated assemblies:
 
 ```csharp
 // Create an isolated assembly load context
