@@ -1,3 +1,8 @@
+### v2.2.2 (14-Sep-2022)
+
+- [Codegen] Fixed an issue where line mappings were missing between Razor templates and generated files.
+- Fixed package bundling issues which sometimes caused errors when resolving `Microsoft.CodeAnalysis.CSharp`.
+
 ### v2.2.1 (25-Mar-2022)
 
 - [Compiler] Added an overload to `Razor.Compile(...)` that allows specifying a list of assembly references to load. When using this overload, automatic assembly resolution present in other overloads will be disabled. (Thanks to [@Stuart Lang](https://github.com/slang25))
