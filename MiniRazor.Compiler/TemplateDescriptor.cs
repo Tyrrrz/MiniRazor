@@ -14,7 +14,7 @@ public class TemplateDescriptor
     private readonly Type _templateType;
 
     /// <summary>
-    /// Initializes an instance of <see cref="TemplateDescriptor"/>.
+    /// Initializes an instance of <see cref="TemplateDescriptor" />.
     /// </summary>
     public TemplateDescriptor(Type templateType) => _templateType = templateType;
 

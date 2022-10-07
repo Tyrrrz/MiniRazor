@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace MiniRazor;
 
 /// <summary>
-/// Non-generic handle for <see cref="TemplateBase{TModel}"/> to simplify usage from reflection.
+/// Non-generic handle for <see cref="TemplateBase{TModel}" /> to simplify its usage via reflection.
 /// </summary>
 public interface ITemplate
 {

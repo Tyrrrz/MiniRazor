@@ -16,12 +16,12 @@ public abstract class TemplateBase<TModel> : ITemplate
     public TextWriter? Output { get; set; }
 
     /// <inheritdoc cref="ITemplate.Model" />
-    public TModel Model { get; set; } = default!;
+    public TModel Model { get; set; }
 
     object? ITemplate.Model
     {
         get => Model;
-        set => Model = (TModel) value!;
+        set => Model = (TModel) value;
     }
 
     /// <inheritdoc />

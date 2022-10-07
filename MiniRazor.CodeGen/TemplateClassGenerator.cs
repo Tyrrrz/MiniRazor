@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;
 using MiniRazor.CodeGen.Utils.Extensions;
 
@@ -12,10 +11,15 @@ namespace MiniRazor.CodeGen;
 public partial class TemplateClassGenerator : ISourceGenerator
 {
     private static readonly string GeneratorVersion =
-        typeof(TemplateClassGenerator).Assembly.GetName().Version.ToString(3);
+        typeof(TemplateClassGenerator)
+            .Assembly
+            .GetName()
+            .Version
+            .ToString(3);
 
     private static string? TryGetModelTypeName(string code, string className) =>
-        Regex.Match(
+        Regex
+            .Match(
                 code,
                 $@"\s*{Regex.Escape(className)}\s*:\s*MiniRazor\.TemplateBase<(.+)>",
                 RegexOptions.Multiline,
@@ -26,7 +30,8 @@ public partial class TemplateClassGenerator : ISourceGenerator
             .NullIfWhiteSpace();
 
     private static string? TryGetNamespace(string code) =>
-        Regex.Match(
+        Regex
+            .Match(
                 code,
                 @"namespace (\S+)",
                 RegexOptions.Multiline,
@@ -68,13 +73,7 @@ public partial class TemplateClassGenerator : ISourceGenerator
             Path.GetFileNameWithoutExtension(filePath)
         );
 
-        var code = Razor.Transpile(content, accessModifier, options =>
-        {
-            options.ConfigureClass((_, node) =>
-            {
-                node.ClassName = className;
-            });
-        });
+        var code = Razor.Transpile(content, className, accessModifier);
 
         // Get model type from the template's base class
         var modelTypeName = TryGetModelTypeName(code, className) ?? "dynamic";

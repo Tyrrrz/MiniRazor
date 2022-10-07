@@ -8,7 +8,7 @@ namespace MiniRazor.Exceptions;
 public class MiniRazorException : Exception
 {
     /// <summary>
-    /// Initializes an instance of <see cref="MiniRazorException"/>.
+    /// Initializes an instance of <see cref="MiniRazorException" />.
     /// </summary>
     public MiniRazorException(string message) : base(message) {}
 }

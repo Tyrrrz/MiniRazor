@@ -13,7 +13,7 @@ public readonly struct RawString
     public string Value { get; }
 
     /// <summary>
-    /// Initializes an instance of <see cref="RawString"/>.
+    /// Initializes an instance of <see cref="RawString" />.
     /// </summary>
     public RawString(string value) => Value = value;
 

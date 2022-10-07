@@ -17,12 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.5" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="6.0.9" PrivateAssets="all" GeneratePathProperty="true" />
     <!-- Keep this dependency as low as possible since we can't bundle it -->
     <!-- https://github.com/Tyrrrz/CliFx/issues/127 -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" />
+    <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

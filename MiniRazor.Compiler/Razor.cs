@@ -20,7 +20,8 @@ namespace MiniRazor;
 public static class Razor
 {
     private static string? TryGetNamespace(string razorCode) =>
-        Regex.Matches(razorCode, @"^\@namespace\s+(.+)$", RegexOptions.Multiline, TimeSpan.FromSeconds(1))
+        Regex
+            .Matches(razorCode, @"^\@namespace\s+(.+)$", RegexOptions.Multiline, TimeSpan.FromSeconds(1))
             .Cast<Match>()
             .LastOrDefault()?
             .Groups[1]
@@ -32,9 +33,12 @@ public static class Razor
     /// </summary>
     public static string Transpile(
         string source,
+        string? className = null,
         string? accessModifier = null,
         Action<RazorProjectEngineBuilder>? configure = null)
     {
+        var actualClassName = className ?? $"MiniRazor_GeneratedTemplate_{Guid.NewGuid():N}";
+
         // For some reason Razor engine ignores @namespace directive if
         // the file system is not configured properly.
         // So to work around it, we "parse" it ourselves.
@@ -52,6 +56,8 @@ public static class Razor
 
                 options.ConfigureClass((_, node) =>
                 {
+                    node.ClassName = actualClassName;
+
                     node.Modifiers.Clear();
 
                     // Absence of access modifiers defaults to internal in C#
@@ -66,10 +72,7 @@ public static class Razor
             }
         );
 
-        var sourceDocument = RazorSourceDocument.Create(
-            source,
-            $"MiniRazor_GeneratedTemplate_{Guid.NewGuid()}.cs"
-        );
+        var sourceDocument = RazorSourceDocument.Create(source, $"{actualClassName}.cs");
 
         var codeDocument = engine.Process(
             sourceDocument,
@@ -80,6 +83,16 @@ public static class Razor
 
         return codeDocument.GetCSharpDocument().GeneratedCode;
     }
+
+    /// <summary>
+    /// Transpiles a Razor template into C# code.
+    /// </summary>
+    // TODO: Remove in the next major version
+    public static string Transpile(
+        string source,
+        string? accessModifier = null,
+        Action<RazorProjectEngineBuilder>? configure = null) =>
+        Transpile(source, null, accessModifier, configure);
 
     private static IReadOnlyList<MetadataReference> LoadReferences(
         AssemblyLoadContext assemblyLoadContext,
@@ -134,14 +147,15 @@ public static class Razor
     /// Compiles a Razor template into executable code.
     /// </summary>
     /// <remarks>
-    /// Generated code is stored in a private memory space and can be released by unloading the specified <see cref="AssemblyLoadContext" />.
+    /// Generated code is stored in a private memory space and
+    /// can be released by unloading the specified <see cref="AssemblyLoadContext" />.
     /// </remarks>
     public static TemplateDescriptor Compile(
         string source,
         AssemblyLoadContext assemblyLoadContext,
         IReadOnlyList<MetadataReference> references)
     {
-        var csharpCode = Transpile(source);
+        var csharpCode = Transpile(source, null, null, null);
         var csharpDocumentAst = CSharpSyntaxTree.ParseText(csharpCode);
 
         var csharpDocumentCompilation = CSharpCompilation.Create(
@@ -193,7 +207,8 @@ public static class Razor
     /// Transitive dependencies are resolved automatically based on references derived from the calling assembly.
     /// </para>
     /// <para>
-    /// Generated code is stored in a private memory space and can be released by unloading the specified <see cref="AssemblyLoadContext" />.
+    /// Generated code is stored in a private memory space and
+    /// can be released by unloading the specified <see cref="AssemblyLoadContext" />.
     /// </para>
     /// </remarks>
     public static TemplateDescriptor Compile(string source, AssemblyLoadContext assemblyLoadContext) =>
@@ -212,7 +227,8 @@ public static class Razor
     /// </para>
     /// <para>
     /// Generated code is stored in a shared memory space and cannot be released.
-    /// Use the overload that takes <see cref="AssemblyLoadContext"/> to specify a custom assembly context that can be unloaded.
+    /// Use the overload that takes <see cref="AssemblyLoadContext" /> to
+    /// specify a custom assembly context that can be unloaded.
     /// </para>
     /// </remarks>
     public static TemplateDescriptor Compile(string source) =>
