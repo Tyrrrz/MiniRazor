@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
     <BuildOutputTargetFolder>analyzers/dotnet/cs</BuildOutputTargetFolder>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>true</GenerateDependencyFile>
-    <IncludeBuildOutput>true</IncludeBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
