@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Props/targets are automatically imported by NuGet, but here we need to do it manually. -->
+  <!-- This needs to be done before any other props or targets, to match NuGet's behavior. -->
+  <Import Project="../MiniRazor.CodeGen/MiniRazor.CodeGen.props" />
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
-
-  <!-- Import props file from codegen project to add compiler metadata
-       (this isn't necessary when installing MiniRazor.CodeGen from NuGet) -->
-  <Import Project="../MiniRazor.CodeGen/MiniRazor.CodeGen.props" />
 
   <ItemGroup>
     <AdditionalFiles Include="Templates/TemplateFoo.cshtml" IsRazorTemplate="true" />

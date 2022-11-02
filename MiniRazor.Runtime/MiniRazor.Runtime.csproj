@@ -4,9 +4,19 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>MiniRazor</RootNamespace>
     <IsPackable>true</IsPackable>
-    <Description>Contains runtime dependencies for MiniRazor.Compiler and MiniRazor.CodeGen</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+      Because this project only has a single target framework, the condition in
+      Directory.Build.props does not appear to work. This is a workaround for that.
+    -->
     <Nullable>annotations</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Contains runtime dependencies for MiniRazor.Compiler and MiniRazor.CodeGen</Description>
   </PropertyGroup>
 
   <ItemGroup>
