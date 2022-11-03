@@ -12,7 +12,7 @@
 > 🔴 **Project status**: discontinued<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)</sup>
 
 > **Note**:
-> Suggested alternatives: [RazorBlade](https://github.com/ltrzesniewski/RazorBlade) (build-time compilation), [RazorLight](https://github.com/toddams/RazorLight) (run-time compilation).
+> As an alternative, consider using [RazorBlade](https://github.com/ltrzesniewski/RazorBlade) for build-time template compilation and [RazorLight](https://github.com/toddams/RazorLight) for run-time template compilation.
 
 **MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both during build and at run-time.
 
