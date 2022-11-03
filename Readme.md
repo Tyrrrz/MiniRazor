@@ -9,7 +9,10 @@
 [![Donate](https://img.shields.io/badge/donate-$$$-8a2be2.svg)](https://tyrrrz.me/donate)
 [![Fuck Russia](https://img.shields.io/badge/fuck-russia-e4181c.svg?labelColor=000000)](https://twitter.com/tyrrrz/status/1495972128977571848)
 
-> 🟡 **Project status**: maintenance mode<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)</sup>
+> 🔴 **Project status**: discontinued<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)</sup>
+
+> **Note**:
+> Suggested alternatives: [RazorBlade](https://github.com/ltrzesniewski/RazorBlade) (build-time compilation), [RazorLight](https://github.com/toddams/RazorLight) (run-time compilation).
 
 **MiniRazor** is a tiny abstraction over the Razor engine, designed to provide a simple interface to compile and render templates, both during build and at run-time.
 
